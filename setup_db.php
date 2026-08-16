@@ -2,6 +2,7 @@
 /**
  * Jayambe Travels - Comprehensive Database Seeder & Setup Script
  * Seeds all Gujarat routes with 20 buses per route across all bus classes
+ * Seeds both Online and Counter Offline reservations for Admin sync testing
  */
 
 require_once __DIR__ . '/config/db.php';
@@ -19,7 +20,7 @@ $schemaFile = __DIR__ . '/schema.sql';
 if (file_exists($schemaFile)) {
     $sql = file_get_contents($schemaFile);
     $pdo->exec($sql);
-    echo "  -> Tables and base routes created successfully!\n";
+    echo "  -> Tables (including seat_locks) and base routes created successfully!\n";
 } else {
     die("FATAL: schema.sql not found at {$schemaFile}\n");
 }
@@ -112,7 +113,6 @@ foreach ($routes as $route) {
     $durMins = isset($matches[2]) ? (int)$matches[2] : 0;
     $totalDurSeconds = ($durHours * 3600) + ($durMins * 60);
     
-    // Base rate per km (e.g. ₹1.10/km for standard Express)
     $baseKmRate = 1.10;
     $baseRouteFare = max(100, round($dist * $baseKmRate));
     
@@ -130,7 +130,6 @@ foreach ($routes as $route) {
         $arrSec = ($depSec + $totalDurSeconds) % 86400;
         $arrTime = gmdate('H:i:s', $arrSec);
         
-        // Calculated fare rounded to nearest 10
         $calculatedFare = round(($baseRouteFare * $classProfile['multiplier']) / 10) * 10;
         
         $busInsertStmt->execute([
@@ -152,7 +151,7 @@ foreach ($routes as $route) {
 
 echo "  -> Successfully generated {$totalBusesInserted} buses across " . count($routes) . " routes (20 buses per route)!\n";
 
-echo "\n[3/4] Generating Realistic Sample Bookings for Testing...\n";
+echo "\n[3/4] Generating Sample Online & Offline Counter Bookings...\n";
 
 $sampleDates = [
     date('Y-m-d'),
@@ -161,7 +160,7 @@ $sampleDates = [
     date('Y-m-d', strtotime('+3 days'))
 ];
 
-// Sample demo passenger names
+// Sample demo passengers
 $passengerNames = [
     ['name' => 'Ketan Shah', 'phone' => '9825100001', 'email' => 'ketan.shah@gmail.com'],
     ['name' => 'Bhavin Mehta', 'phone' => '9879000002', 'email' => 'bhavin.m@yahoo.com'],
@@ -176,8 +175,9 @@ $sampleBuses = $sampleBusStmt->fetchAll();
 $bookingInsertStmt = $pdo->prepare("INSERT INTO bookings (
     booking_reference, user_id, bus_id, journey_date, seat_numbers, total_passengers,
     base_fare, gst_amount, total_amount, payment_method, payment_status, transaction_id,
-    passenger_name, passenger_phone, passenger_email, passenger_details, booking_status
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Paid', ?, ?, ?, ?, ?, 'Confirmed')");
+    passenger_name, passenger_phone, passenger_email, passenger_details, booking_status,
+    booking_channel, booked_by_user_id, boarding_point, counter_payment_mode
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Paid', ?, ?, ?, ?, ?, 'Confirmed', ?, ?, ?, ?)");
 
 $sampleBookingCount = 0;
 foreach ($sampleBuses as $bIndex => $sBus) {
@@ -185,10 +185,15 @@ foreach ($sampleBuses as $bIndex => $sBus) {
         $pInfo = $passengerNames[($bIndex + $dIndex) % count($passengerNames)];
         
         $pnr = 'JAY-' . strtoupper(substr(md5($bIndex . $dIndex . microtime()), 0, 6));
-        $txn = 'TXN-NET-' . strtoupper(bin2hex(random_bytes(4)));
+        $isCounter = ($bIndex % 2 === 1);
+        $channel = $isCounter ? 'counter' : 'online';
+        $paymentMethod = $isCounter ? 'Counter Cash / POS' : 'Net Banking (SBI)';
+        $counterMode = $isCounter ? 'Cash' : 'Online NetBanking';
+        $agentId = $isCounter ? 3 : null; // Counter Agent Ramesh Shah
+        $txn = $isCounter ? 'TXN-POS-' . strtoupper(bin2hex(random_bytes(3))) : 'TXN-NET-' . strtoupper(bin2hex(random_bytes(3)));
         
         $isSleeper = (bool)$sBus['is_sleeper'];
-        $seatsChosen = $isSleeper ? ['L1', 'L2'] : ['3A', '3B'];
+        $seatsChosen = $isSleeper ? ($isCounter ? ['L3', 'L4'] : ['L1', 'L2']) : ($isCounter ? ['4A', '4B'] : ['3A', '3B']);
         $seatStr = implode(',', $seatsChosen);
         $paxCount = count($seatsChosen);
         
@@ -221,26 +226,33 @@ foreach ($sampleBuses as $bIndex => $sBus) {
             $baseTotal,
             $gst,
             $grandTotal,
-            'Net Banking (SBI)',
+            $paymentMethod,
             $txn,
             $pInfo['name'],
             $pInfo['phone'],
             $pInfo['email'],
-            $paxDetails
+            $paxDetails,
+            $channel,
+            $agentId,
+            'Geeta Mandir Central Terminal Platform 2',
+            $counterMode
         ]);
         $sampleBookingCount++;
     }
 }
 
-echo "  -> Inserted {$sampleBookingCount} sample bookings for instant testing!\n";
+echo "  -> Inserted {$sampleBookingCount} sample bookings (Online + Counter Offline)!\n";
 
 echo "\n[4/4] Setup Completed Successfully!\n";
 echo "--------------------------------------------------------\n";
 echo "✓ Total Routes: " . count($routes) . "\n";
 echo "✓ Total Buses: {$totalBusesInserted} (20 per route)\n";
 echo "✓ Sample Bookings: {$sampleBookingCount}\n";
-echo "✓ Default Passenger Account: demo@jayambetravels.com / password123\n";
-echo "✓ Default Admin Account: admin@jayambetravels.com / password123\n";
+echo "✓ SuperAdmin Account: admin@jayambetravels.com / password123\n";
+echo "✓ Counter Agent (Ahmedabad): counter.ahmedabad@jayambetravels.com / password123\n";
+echo "✓ Counter Agent (Surat): counter.surat@jayambetravels.com / password123\n";
+echo "✓ Counter Agent (Vadodara): counter.vadodara@jayambetravels.com / password123\n";
 echo "--------------------------------------------------------\n";
-echo "You can now visit http://localhost/bus/ in your browser.\n";
+echo "Admin Portal: http://localhost/bus/admin/\n";
+echo "Customer Site: http://localhost/bus/\n";
 echo "</pre>";

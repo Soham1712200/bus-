@@ -27,6 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login_submit'])) {
             login_user($user);
             set_flash('success', "Welcome back, {$user['name']}!");
             
+            if ($user['role'] === 'admin' || $user['role'] === 'counter_agent') {
+                header("Location: admin/index.php");
+                exit;
+            }
+
             $redirect = $_SESSION['redirect_after_login'] ?? 'my-bookings.php';
             unset($_SESSION['redirect_after_login']);
             header("Location: {$redirect}");
@@ -76,8 +81,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login_submit'])) {
                 Password: <code>password123</code>
             </div>
 
-            <div style="text-align: center; font-size: 13px; color: #64748b;">
+            <div style="text-align: center; font-size: 13px; color: #64748b; margin-bottom: 12px;">
                 Don't have an account? <a href="register.php" style="color: var(--primary); font-weight: 700;">Create Account</a>
+            </div>
+
+            <div style="text-align: center; border-top: 1px dashed #cbd5e1; padding-top: 12px;">
+                <a href="admin/login.php" style="color: #0284c7; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                    <i class="fas fa-shield-halved"></i> Staff & Branch Office Portal Login &rarr;
+                </a>
             </div>
 
         </div>

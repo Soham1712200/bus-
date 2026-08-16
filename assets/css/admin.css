@@ -1,0 +1,353 @@
+/* ==========================================================================
+   JAYAMBE TRAVELS - ADMIN & BRANCH OFFICE PORTAL STYLESHEET
+   Unified Real-Time 4-Color Seat Engine & Thermal Receipt Print Styling
+   ========================================================================== */
+
+@import url('style.css');
+
+/* Admin Layout Customizations */
+.admin-navbar {
+    background: #0b132b;
+    border-bottom: 2px solid var(--primary);
+    padding: 0 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+.admin-navbar-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.branch-badge {
+    background: rgba(249, 115, 22, 0.15);
+    border: 1px solid rgba(249, 115, 22, 0.4);
+    color: #ffedd5;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sync-status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(16, 185, 129, 0.15);
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
+}
+.sync-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: syncPulse 1.5s infinite;
+}
+@keyframes syncPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.5; }
+}
+
+/* Admin Dashboard Stat Cards */
+.stats-grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+.stat-card-widget {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition-normal);
+}
+.stat-card-widget:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary);
+}
+.stat-card-widget::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+}
+.stat-card-widget.blue::before { background: linear-gradient(90deg, #0284c7, #0369a1); }
+.stat-card-widget.green::before { background: linear-gradient(90deg, #10b981, #059669); }
+.stat-card-widget.purple::before { background: linear-gradient(90deg, #8b5cf6, #7c3aed); }
+
+.stat-widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+.stat-widget-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.stat-widget-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    background: #ffedd5;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+.stat-card-widget.blue .stat-widget-icon { background: #e0f2fe; color: #0284c7; }
+.stat-card-widget.green .stat-widget-icon { background: #d1fae5; color: #10b981; }
+.stat-card-widget.purple .stat-widget-icon { background: #ede9fe; color: #8b5cf6; }
+
+.stat-widget-value {
+    font-size: 28px;
+    font-weight: 900;
+    color: #0f172a;
+    line-height: 1.2;
+}
+.stat-widget-sub {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ==========================================================================
+   UNIFIED REAL-TIME 4-COLOR SEAT ENGINE
+   ========================================================================== */
+
+/* 4-Color Seat Unit Styles */
+.counter-seat-unit,
+.counter-berth-unit {
+    position: relative;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 1. Green / White: Available */
+.counter-seat-unit.state-available {
+    background: #ffffff;
+    border: 2px solid #cbd5e1;
+    color: #1e293b;
+}
+.counter-seat-unit.state-available:hover {
+    border-color: var(--primary);
+    background: #fff7ed;
+    transform: scale(1.08);
+}
+
+/* 2. Red: Booked Online (Website) */
+.counter-seat-unit.state-online {
+    background: #ef4444 !important;
+    border-color: #dc2626 !important;
+    color: #ffffff !important;
+    cursor: not-allowed;
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.35);
+}
+
+/* 3. Blue: Booked Offline (Counter Cash/POS) */
+.counter-seat-unit.state-counter {
+    background: #0284c7 !important;
+    border-color: #0369a1 !important;
+    color: #ffffff !important;
+    cursor: not-allowed;
+    box-shadow: 0 2px 6px rgba(2, 132, 199, 0.35);
+}
+
+/* 4. Orange: Temporarily Locked / In Progress */
+.counter-seat-unit.state-locked {
+    background: #f97316 !important;
+    border-color: #ea580c !important;
+    color: #ffffff !important;
+    animation: lockGlowPulse 1.5s infinite;
+    cursor: not-allowed;
+}
+@keyframes lockGlowPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.6); }
+    50% { box-shadow: 0 0 0 8px rgba(249, 115, 22, 0); }
+}
+
+/* Selected at current counter */
+.counter-seat-unit.state-selected {
+    background: #10b981 !important;
+    border-color: #059669 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.5);
+    transform: scale(1.06);
+}
+
+/* 4-Color Legend Bar */
+.seat-legend-4colors {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 14px;
+    background: #f8fafc;
+    border-radius: var(--radius-md);
+    border: 1px solid #e2e8f0;
+    margin-top: 18px;
+    font-size: 12px;
+    font-weight: 700;
+}
+.legend-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.chip-sample {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+}
+.chip-sample.avail { background: #ffffff; border: 2px solid #cbd5e1; }
+.chip-sample.online { background: #ef4444; }
+.chip-sample.counter { background: #0284c7; }
+.chip-sample.locked { background: #f97316; }
+.chip-sample.selected { background: #10b981; }
+
+/* Booking Channel Badges */
+.badge-channel-online {
+    background: #fee2e2;
+    color: #991b1b;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.badge-channel-counter {
+    background: #e0f2fe;
+    color: #075985;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Live Activity Feed Stream */
+.live-feed-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    height: fit-content;
+}
+.feed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+.feed-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 480px;
+    overflow-y: auto;
+}
+.feed-item-row {
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: var(--transition-fast);
+    animation: fadeIn 0.4s ease-out;
+}
+.feed-item-row:hover {
+    background: #ffffff;
+    box-shadow: var(--shadow-sm);
+    border-color: #cbd5e1;
+}
+
+/* ==========================================================================
+   THERMAL 80MM RECEIPT & PRINT STYLES
+   ========================================================================== */
+.thermal-receipt-wrap {
+    max-width: 380px;
+    margin: 30px auto;
+    background: #ffffff;
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: var(--shadow-lg);
+    font-family: 'Courier New', Courier, monospace;
+}
+
+@media print {
+    /* Hide Everything Except Thermal Receipt on thermal print page */
+    .admin-navbar,
+    .admin-footer,
+    .btn-receipt-actions,
+    .top-bar,
+    .flash-messages-container {
+        display: none !important;
+    }
+
+    body {
+        background: #ffffff !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .thermal-receipt-wrap {
+        border: none !important;
+        box-shadow: none !important;
+        max-width: 100% !important;
+        width: 80mm !important; /* Standard POS Thermal Width */
+        padding: 0 !important;
+        margin: 0 !important;
+        font-family: monospace !important;
+        font-size: 9pt !important;
+        color: #000000 !important;
+    }
+
+    .thermal-receipt-wrap table {
+        width: 100% !important;
+    }
+}

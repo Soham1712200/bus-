@@ -53,9 +53,26 @@ const BookingApp = {
             btn.innerHTML = '<i class="fas fa-times"></i> Close Matrix';
         }
 
-        // Render seats
-        this.renderSeats(busId);
-        this.updatePricing(busId);
+        // Fetch live sync seats from API (integrates counter bookings and active locks)
+        const journeyDateInput = document.querySelector('input[name="journey_date"]');
+        const journeyDate = journeyDateInput ? journeyDateInput.value : new Date().toISOString().split('T')[0];
+
+        fetch(`api/sync_seats.php?action=get_matrix&bus_id=${busId}&journey_date=${journeyDate}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success' && data.seats) {
+                    const online = data.seats.booked_online || [];
+                    const counter = data.seats.booked_offline || [];
+                    const locked = Object.keys(data.seats.locked || {});
+                    this.bookedSeats[busId] = [...new Set([...online, ...counter, ...locked])];
+                }
+                this.renderSeats(busId);
+                this.updatePricing(busId);
+            })
+            .catch(() => {
+                this.renderSeats(busId);
+                this.updatePricing(busId);
+            });
     },
 
     /**

@@ -1,13 +1,14 @@
 -- =======================================================
 -- Jayambe Travels - Bus Booking Web Application
--- Database Schema & Comprehensive Seed Data
+-- Database Schema & Comprehensive Seed Data (Customer + Admin Portal)
 -- =======================================================
 
 CREATE DATABASE IF NOT EXISTS `jayambe_travels` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `jayambe_travels`;
 
--- Drop tables if they already exist in reverse order of foreign keys
+-- Drop tables in reverse order of foreign keys
 SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS `seat_locks`;
 DROP TABLE IF EXISTS `cancellations`;
 DROP TABLE IF EXISTS `bookings`;
 DROP TABLE IF EXISTS `buses`;
@@ -17,7 +18,7 @@ DROP TABLE IF EXISTS `contact_inquiries`;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- -------------------------------------------------------
--- 1. Table: Users (Passenger Accounts & Admins)
+-- 1. Table: Users (Passenger Accounts, Admins & Counter Agents)
 -- -------------------------------------------------------
 CREATE TABLE `users` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -25,7 +26,8 @@ CREATE TABLE `users` (
   `email` VARCHAR(150) NOT NULL UNIQUE,
   `phone` VARCHAR(20) NOT NULL UNIQUE,
   `password_hash` VARCHAR(255) NOT NULL,
-  `role` ENUM('passenger', 'admin') DEFAULT 'passenger',
+  `role` ENUM('passenger', 'admin', 'counter_agent') DEFAULT 'passenger',
+  `branch_office` VARCHAR(100) DEFAULT 'Ahmedabad Head Office',
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -88,16 +90,41 @@ CREATE TABLE `bookings` (
   `passenger_email` VARCHAR(150) NOT NULL,
   `passenger_details` JSON DEFAULT NULL,
   `booking_status` ENUM('Confirmed', 'Cancelled') DEFAULT 'Confirmed',
+  `booking_channel` ENUM('online', 'counter') DEFAULT 'online',
+  `booked_by_user_id` INT NULL,
+  `boarding_point` VARCHAR(150) DEFAULT 'Central Office Terminal',
+  `counter_payment_mode` VARCHAR(50) DEFAULT 'Net Banking',
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE SET NULL,
+  FOREIGN KEY (`booked_by_user_id`) REFERENCES `users`(`id`) ON DELETE SET NULL,
   FOREIGN KEY (`bus_id`) REFERENCES `buses`(`id`) ON DELETE CASCADE,
   INDEX (`booking_reference`),
   INDEX (`passenger_phone`),
-  INDEX (`journey_date`)
+  INDEX (`journey_date`),
+  INDEX (`booking_channel`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- -------------------------------------------------------
--- 5. Table: Cancellations (Ticket Cancellation Logs)
+-- 5. Table: Seat Locks (Real-Time Seat Hold Engine)
+-- -------------------------------------------------------
+CREATE TABLE `seat_locks` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `bus_id` INT NOT NULL,
+  `journey_date` DATE NOT NULL,
+  `seat_number` VARCHAR(10) NOT NULL,
+  `session_token` VARCHAR(100) NOT NULL,
+  `locked_by_channel` ENUM('online', 'counter') NOT NULL DEFAULT 'counter',
+  `locked_by_name` VARCHAR(100) DEFAULT 'Staff',
+  `locked_until` DATETIME NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY `unique_bus_seat_lock` (`bus_id`, `journey_date`, `seat_number`),
+  FOREIGN KEY (`bus_id`) REFERENCES `buses`(`id`) ON DELETE CASCADE,
+  INDEX (`journey_date`),
+  INDEX (`locked_until`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- -------------------------------------------------------
+-- 6. Table: Cancellations (Ticket Cancellation Logs)
 -- -------------------------------------------------------
 CREATE TABLE `cancellations` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -112,7 +139,7 @@ CREATE TABLE `cancellations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- -------------------------------------------------------
--- 6. Table: Contact Inquiries
+-- 7. Table: Contact Inquiries
 -- -------------------------------------------------------
 CREATE TABLE `contact_inquiries` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -126,12 +153,15 @@ CREATE TABLE `contact_inquiries` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- =======================================================
--- SEED DATA: Users (Default Demo Account)
--- Default password: "password123"
+-- SEED DATA: Users (Passenger, SuperAdmin, Counter Agents)
+-- Password for all accounts: "password123"
 -- =======================================================
-INSERT INTO `users` (`id`, `name`, `email`, `phone`, `password_hash`, `role`) VALUES
-(1, 'Jayesh Patel', 'demo@jayambetravels.com', '9876543210', '$2y$10$wT8mQ0ZcRkP.bL1fP6j8y.Mh0gW1X7K2zE6f34n7W5sK0mU4W7w4a', 'passenger'),
-(2, 'Admin Jayambe', 'admin@jayambetravels.com', '9825012345', '$2y$10$wT8mQ0ZcRkP.bL1fP6j8y.Mh0gW1X7K2zE6f34n7W5sK0mU4W7w4a', 'admin');
+INSERT INTO `users` (`id`, `name`, `email`, `phone`, `password_hash`, `role`, `branch_office`) VALUES
+(1, 'Jayesh Patel', 'demo@jayambetravels.com', '9876543210', '$2y$12$FucW.nMpBIgrtYIpuxgq/.KUiWtISqX4fgc3HtoxTm079hqOrv3xa', 'passenger', NULL),
+(2, 'Admin Operations Manager', 'admin@jayambetravels.com', '9825012345', '$2y$12$FucW.nMpBIgrtYIpuxgq/.KUiWtISqX4fgc3HtoxTm079hqOrv3xa', 'admin', 'Ahmedabad Head Office'),
+(3, 'Ramesh Shah (Ahmedabad Counter)', 'counter.ahmedabad@jayambetravels.com', '9825100111', '$2y$12$FucW.nMpBIgrtYIpuxgq/.KUiWtISqX4fgc3HtoxTm079hqOrv3xa', 'counter_agent', 'Ahmedabad Head Office (Geeta Mandir)'),
+(4, 'Suresh Mehta (Surat Counter)', 'counter.surat@jayambetravels.com', '9825200222', '$2y$12$FucW.nMpBIgrtYIpuxgq/.KUiWtISqX4fgc3HtoxTm079hqOrv3xa', 'counter_agent', 'Surat Central Branch Office (Ring Road)'),
+(5, 'Dipak Joshi (Vadodara Counter)', 'counter.vadodara@jayambetravels.com', '9825300333', '$2y$12$FucW.nMpBIgrtYIpuxgq/.KUiWtISqX4fgc3HtoxTm079hqOrv3xa', 'counter_agent', 'Vadodara Central Branch Office (Sayajigunj)');
 
 -- =======================================================
 -- SEED DATA: Routes across all major Gujarat Cities

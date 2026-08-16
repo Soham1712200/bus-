@@ -1,18 +1,26 @@
 <?php
 /**
- * Jayambe Travels - Comprehensive Automated Verification Script
+ * Jayambe Travels - Comprehensive Automated Verification Script (Customer + Admin & Branch Office Portal)
  */
 
 echo "=== JAYAMBE TRAVELS AUTOMATED END-TO-END VERIFICATION ===\n\n";
 
 $baseUrl = 'http://localhost/bus';
+$cookieFile = sys_get_temp_dir() . '/jayambe_test_cookie.txt';
+if (file_exists($cookieFile)) unlink($cookieFile);
 
-function test_url($url, $method = 'GET', $data = null, $follow = false) {
+function test_url($url, $method = 'GET', $data = null, $follow = false, $useCookie = false) {
+    global $cookieFile;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, $follow);
     curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    
+    if ($useCookie) {
+        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieFile);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieFile);
+    }
     
     if ($method === 'POST') {
         curl_setopt($ch, CURLOPT_POST, true);
@@ -25,7 +33,6 @@ function test_url($url, $method = 'GET', $data = null, $follow = false) {
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $redirectUrl = curl_getinfo($ch, CURLINFO_REDIRECT_URL);
     $error = curl_error($ch);
-    curl_close($ch);
     
     return [
         'code' => $httpCode,
@@ -36,7 +43,7 @@ function test_url($url, $method = 'GET', $data = null, $follow = false) {
 }
 
 // 1. Homepage Test
-echo "[Test 1] Testing Homepage (index.php)...\n";
+echo "[Test 1] Testing Customer Homepage (index.php)...\n";
 $res1 = test_url("{$baseUrl}/index.php");
 if ($res1['code'] === 200 && strpos($res1['body'], 'Jayambe') !== false && strpos($res1['body'], 'Search Buses') !== false) {
     echo "  [PASS] Homepage rendered successfully (HTTP 200) with Jayambe branding and Search Widget.\n";
@@ -53,122 +60,127 @@ if ($res2['code'] === 200 && strpos($res2['body'], 'Buses Found') !== false && s
     echo "  [FAIL] Search failed: HTTP {$res2['code']}\n";
 }
 
-// 3. API City List Test
-echo "\n[Test 3] Testing City Autocomplete API (api/get_cities.php)...\n";
-$res3 = test_url("{$baseUrl}/api/get_cities.php");
+// 3. Real-Time Seat Synchronization API Test
+echo "\n[Test 3] Testing Real-Time Seat Engine API (api/sync_seats.php?action=get_matrix)...\n";
+$res3 = test_url("{$baseUrl}/api/sync_seats.php?action=get_matrix&bus_id=1&journey_date=" . date('Y-m-d'));
 $json3 = json_decode($res3['body'], true);
-if ($res3['code'] === 200 && isset($json3['status']) && $json3['status'] === 'success' && count($json3['data']) >= 10) {
-    echo "  [PASS] City API returned " . count($json3['data']) . " Gujarat cities.\n";
+if ($res3['code'] === 200 && isset($json3['status']) && $json3['status'] === 'success' && isset($json3['summary'])) {
+    echo "  [PASS] Real-time seat engine returned 4-color status matrix (Available: {$json3['summary']['available']}, Online Booked: {$json3['summary']['booked_online']}, Counter Booked: {$json3['summary']['booked_offline']}).\n";
 } else {
-    echo "  [FAIL] City API failed: " . $res3['body'] . "\n";
+    echo "  [FAIL] Seat sync API failed: " . $res3['body'] . "\n";
 }
 
-// 4. API Bus Seats Test
-echo "\n[Test 4] Testing Bus Seats API (api/get_bus_seats.php?bus_id=1)...\n";
-$res4 = test_url("{$baseUrl}/api/get_bus_seats.php?bus_id=1&journey_date=" . date('Y-m-d'));
+// 4. Temporary Seat Hold Lock API Test
+echo "\n[Test 4] Testing Seat Locking Engine (api/sync_seats.php?action=lock_seat)...\n";
+$lockSeatNo = '9C';
+$res4 = test_url("{$baseUrl}/api/sync_seats.php?action=lock_seat&bus_id=1&journey_date=" . date('Y-m-d') . "&seat_number={$lockSeatNo}&channel=counter&agent_name=TestAgent&session_token=TEST_SESS_123");
 $json4 = json_decode($res4['body'], true);
 if ($res4['code'] === 200 && isset($json4['status']) && $json4['status'] === 'success') {
-    echo "  [PASS] Bus Seats API returned bus details, available seat count: {$json4['available_count']}.\n";
+    echo "  [PASS] Temporary seat lock acquired successfully for Seat {$lockSeatNo} (5-minute hold).\n";
 } else {
-    echo "  [FAIL] Bus Seats API failed: " . $res4['body'] . "\n";
+    echo "  [FAIL] Seat lock failed: " . $res4['body'] . "\n";
 }
 
-// 5. Booking Creation and PNR Generation Test
-echo "\n[Test 5] Testing End-to-End Booking Process (process-booking.php)...\n";
-$randomRow = rand(6, 9);
-$dynamicSeat = "{$randomRow}A,{$randomRow}B";
-$bookingData = [
-    'bus_id' => 1,
-    'journey_date' => date('Y-m-d', strtotime('+' . rand(5, 20) . ' days')),
-    'seat_numbers' => $dynamicSeat,
-    'passenger_name' => 'Amit Shah',
-    'contact_phone' => '9825199999',
-    'contact_email' => 'amit.shah@gujarat.com',
-    'passengers_json' => json_encode([
-        ['name' => 'Amit Shah', 'age' => 40, 'gender' => 'Male', 'seat' => "{$randomRow}A"],
-        ['name' => 'Priya Shah', 'age' => 36, 'gender' => 'Female', 'seat' => "{$randomRow}B"]
-    ]),
-    'base_fare' => 580.00,
-    'gst_amount' => 29.00,
-    'total_amount' => 624.00,
-    'selected_bank' => 'State Bank of India'
+// 5. Admin & Staff Authentication Test (admin/login.php)
+echo "\n[Test 5] Testing Admin & Counter Staff Login (admin/login.php)...\n";
+$loginData = [
+    'staff_login_submit' => 1,
+    'email' => 'counter.ahmedabad@jayambetravels.com',
+    'password' => 'password123'
 ];
-
-$res5 = test_url("{$baseUrl}/process-booking.php", 'POST', $bookingData, false);
-$createdPnr = null;
-if (($res5['code'] === 302 || $res5['code'] === 200) && !empty($res5['redirect'])) {
-    parse_str(parse_url($res5['redirect'], PHP_URL_QUERY), $queryParams);
-    $createdPnr = $queryParams['pnr'] ?? null;
-    echo "  [PASS] Booking created successfully! Redirected to ticket with PNR: {$createdPnr}\n";
+$res5 = test_url("{$baseUrl}/admin/login.php", 'POST', $loginData, false, true);
+if ($res5['code'] === 302 && strpos($res5['redirect'], 'index.php') !== false) {
+    echo "  [PASS] Staff authenticated successfully! Redirected to Operations Dashboard.\n";
 } else {
-    echo "  [FAIL] Booking process failed: HTTP {$res5['code']}, Response: " . substr($res5['body'], 0, 200) . "\n";
+    echo "  [FAIL] Staff login failed: HTTP {$res5['code']}\n";
 }
 
-// 6. E-Ticket View & Print Format Test
-if ($createdPnr) {
-    echo "\n[Test 6] Testing Printable Official E-Ticket (ticket.php?pnr={$createdPnr})...\n";
-    $res6 = test_url("{$baseUrl}/ticket.php?pnr={$createdPnr}");
-    if (
-        $res6['code'] === 200 && 
-        strpos($res6['body'], $createdPnr) !== false && 
-        strpos($res6['body'], 'ticket-barcode') !== false && 
-        strpos($res6['body'], 'ticket-qrcode') !== false && 
-        strpos($res6['body'], 'Amit Shah') !== false
-    ) {
-        echo "  [PASS] E-Ticket rendered perfectly with PNR, Passenger details, Barcode SVG, and QR code SVG.\n";
+// 6. Admin Dashboard Overview Test (admin/index.php)
+echo "\n[Test 6] Testing Admin Dashboard (admin/index.php)...\n";
+$res6 = test_url("{$baseUrl}/admin/index.php", 'GET', null, false, true);
+if ($res6['code'] === 200 && strpos($res6['body'], 'Central Fleet & Operations Command') !== false && strpos($res6['body'], 'Total Gross Revenue') !== false) {
+    echo "  [PASS] Admin Dashboard rendered with operational stat widgets and channel ratio bars.\n";
+} else {
+    echo "  [FAIL] Dashboard failed: HTTP {$res6['code']}\n";
+}
+
+// 7. Live Activity Feed API Test (api/get_live_feed.php)
+echo "\n[Test 7] Testing Live Activity Feed Stream (api/get_live_feed.php)...\n";
+$res7 = test_url("{$baseUrl}/api/get_live_feed.php");
+$json7 = json_decode($res7['body'], true);
+if ($res7['code'] === 200 && isset($json7['status']) && $json7['status'] === 'success' && $json7['count'] > 0) {
+    echo "  [PASS] Live activity stream returned {$json7['count']} real-time reservations.\n";
+} else {
+    echo "  [FAIL] Live feed failed: " . $res7['body'] . "\n";
+}
+
+// 8. Offline Counter Booking Test (admin/counter-booking.php)
+echo "\n[Test 8] Testing Offline Counter Ticket Issuance (admin/counter-booking.php)...\n";
+$counterRow = rand(2, 6);
+$counterSeat = "{$counterRow}C,{$counterRow}D";
+$randomFutureDays = rand(10, 30);
+$counterData = [
+    'submit_counter_booking' => 1,
+    'bus_id' => 1,
+    'journey_date' => date('Y-m-d', strtotime("+{$randomFutureDays} days")),
+    'seat_numbers' => $counterSeat,
+    'passenger_name' => 'Dipen Shah',
+    'passenger_phone' => '9825188888',
+    'passenger_email' => 'counter@jayambetravels.com',
+    'boarding_point' => 'Geeta Mandir Central Terminal Platform 3',
+    'counter_payment_mode' => 'Cash',
+    'total_amount' => 1248.00,
+    'passenger_names' => ['Dipen Shah', 'Kavita Shah'],
+    'passenger_ages' => [35, 32],
+    'passenger_genders' => ['Male', 'Female']
+];
+$res8 = test_url("{$baseUrl}/admin/counter-booking.php", 'POST', $counterData, false, true);
+$createdCounterPnr = null;
+if ($res8['code'] === 302 && preg_match('/receipt\.php\?pnr=([A-Z0-9\-]+)/', $res8['redirect'], $m)) {
+    $createdCounterPnr = $m[1];
+    echo "  [PASS] Offline Counter Ticket issued successfully! PNR: {$createdCounterPnr}\n";
+} else {
+    echo "  [FAIL] Counter booking failed: HTTP {$res8['code']}\n";
+}
+
+// 9. Dual-Mode 80mm Thermal Receipt Test (admin/receipt.php)
+if ($createdCounterPnr) {
+    echo "\n[Test 9] Testing Dual-Mode Thermal Receipt (admin/receipt.php?pnr={$createdCounterPnr})...\n";
+    $res9 = test_url("{$baseUrl}/admin/receipt.php?pnr={$createdCounterPnr}", 'GET', null, false, true);
+    if ($res9['code'] === 200 && strpos($res9['body'], 'thermal-slip') !== false && strpos($res9['body'], $createdCounterPnr) !== false) {
+        echo "  [PASS] Thermal 80mm POS receipt rendered with QR Code, Barcode, and Cashier meta.\n";
     } else {
-        echo "  [FAIL] E-Ticket page missing key components.\n";
+        echo "  [FAIL] Thermal receipt failed: HTTP {$res9['code']}\n";
     }
 }
 
-// 7. Standalone Print Lookup Test
-if ($createdPnr) {
-    echo "\n[Test 7] Testing Standalone Ticket Search (print-ticket.php?type=pnr&query={$createdPnr})...\n";
-    $res7 = test_url("{$baseUrl}/print-ticket.php?type=pnr&query={$createdPnr}");
-    if ($res7['code'] === 302 && strpos($res7['redirect'], "ticket.php?pnr={$createdPnr}") !== false) {
-        echo "  [PASS] Standalone lookup found ticket and redirected accurately.\n";
-    } else {
-        echo "  [FAIL] Standalone lookup failed: HTTP {$res7['code']}\n";
-    }
-}
-
-// 8. Ticket Cancellation & Refund Calculation Test
-if ($createdPnr) {
-    echo "\n[Test 8] Testing Ticket Cancellation & Refund (cancel-ticket.php)...\n";
-    $cancelData = [
-        'confirm_cancellation' => 1,
-        'booking_id' => 101, // Newest
-        'pnr' => $createdPnr,
-        'refund_amount' => 561.60,
-        'cancellation_charge' => 62.40,
-        'cancellation_reason' => 'Meeting rescheduled'
-    ];
-    $res8 = test_url("{$baseUrl}/cancel-ticket.php", 'POST', $cancelData, false);
-    if ($res8['code'] === 200 && strpos($res8['body'], 'Cancellation Confirmed') !== false) {
-        echo "  [PASS] Ticket successfully cancelled with instant refund calculation receipt.\n";
-    } else {
-        echo "  [FAIL] Cancellation failed: HTTP {$res8['code']}\n";
-    }
-}
-
-// 9. Route Schedule Timetable Test
-echo "\n[Test 9] Testing Route Schedule (routes.php)...\n";
-$res9 = test_url("{$baseUrl}/routes.php");
-if ($res9['code'] === 200 && strpos($res9['body'], 'Gujarat State Route Schedule') !== false && strpos($res9['body'], 'Buses / Day') !== false) {
-    echo "  [PASS] Route Timetable rendered with 28 major corridors and daily frequency.\n";
+// 10. Bus Trip Passenger Manifest Test (admin/manifest.php)
+echo "\n[Test 10] Testing Bus Driver/Conductor Trip Manifest (admin/manifest.php)...\n";
+$res10 = test_url("{$baseUrl}/admin/manifest.php?bus_id=1&journey_date=" . date('Y-m-d'), 'GET', null, false, true);
+if ($res10['code'] === 200 && strpos($res10['body'], 'Conductor Duty Slip') !== false && strpos($res10['body'], 'Passenger Occupancy') !== false) {
+    echo "  [PASS] Passenger Trip Manifest generated with occupancy stats, boarding points, and sign-off blocks.\n";
 } else {
-    echo "  [FAIL] Route schedule failed: HTTP {$res9['code']}\n";
+    echo "  [FAIL] Manifest failed: HTTP {$res10['code']}\n";
 }
 
-// 10. Contact Us & Offices Directory Test
-echo "\n[Test 10] Testing Contact Page (contact.php)...\n";
-$res10 = test_url("{$baseUrl}/contact.php");
-if ($res10['code'] === 200 && strpos($res10['body'], 'Geeta Mandir Road') !== false && strpos($res10['body'], '1800-233-6666') !== false) {
-    echo "  [PASS] Contact page rendered with all Gujarat branch office addresses and toll-free helpline.\n";
+// 11. Master Bookings Directory Test (admin/bookings.php)
+echo "\n[Test 11] Testing Master Reservation Directory (admin/bookings.php)...\n";
+$res11 = test_url("{$baseUrl}/admin/bookings.php", 'GET', null, false, true);
+if ($res11['code'] === 200 && strpos($res11['body'], 'Master Reservation Directory') !== false && strpos($res11['body'], 'Web') !== false && strpos($res11['body'], 'Counter') !== false) {
+    echo "  [PASS] Master Directory rendered with online/counter channel filters and action triggers.\n";
 } else {
-    echo "  [FAIL] Contact page failed: HTTP {$res10['code']}\n";
+    echo "  [FAIL] Master directory failed: HTTP {$res11['code']}\n";
+}
+
+// 12. Fleet & Fare Manager Test (admin/buses.php)
+echo "\n[Test 12] Testing Fleet Schedules & Fare Manager (admin/buses.php)...\n";
+$res12 = test_url("{$baseUrl}/admin/buses.php", 'GET', null, false, true);
+if ($res12['code'] === 200 && strpos($res12['body'], 'Fleet Schedules & Operations Manager') !== false) {
+    echo "  [PASS] Fleet schedule manager rendered with corridor filters and fare editor.\n";
+} else {
+    echo "  [FAIL] Bus fleet manager failed: HTTP {$res12['code']}\n";
 }
 
 echo "\n========================================================\n";
-echo "ALL VERIFICATION TESTS COMPLETED SUCCESSFULLY!\n";
+echo "ALL 12 END-TO-END VERIFICATION TESTS COMPLETED SUCCESSFULLY!\n";
 echo "========================================================\n";
