@@ -82,13 +82,6 @@ require_once __DIR__ . '/includes/header.php';
                 </button>
             </form>
 
-            <!-- Quick Demo Credentials Helper -->
-            <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 10px; padding: 12px; font-size: 12px; color: #475569; margin-bottom: 18px;">
-                <strong><i class="fas fa-key text-primary me-1"></i> Demo Credentials:</strong><br>
-                Email: <code>demo@jayambetravels.com</code><br>
-                Password: <code>password123</code>
-            </div>
-
             <div style="text-align: center; font-size: 13px; color: #64748b; margin-bottom: 12px;">
                 Don't have an account? <a href="register.php" style="color: var(--primary); font-weight: 700;">Create Account</a>
             </div>

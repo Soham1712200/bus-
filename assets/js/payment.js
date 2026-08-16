@@ -106,19 +106,6 @@ const NetBankingDemo = {
     },
 
     /**
-     * Autofill Demo OTP '123456'
-     */
-    autofillDemoOtp() {
-        const demoCode = ['1', '2', '3', '4', '5', '6'];
-        const otpInputs = document.querySelectorAll('.otp-digit-field');
-        otpInputs.forEach((input, i) => {
-            input.value = demoCode[i] || '';
-        });
-        const lastInput = otpInputs[otpInputs.length - 1];
-        if (lastInput) lastInput.focus();
-    },
-
-    /**
      * Verify Demo OTP and Submit Booking
      */
     verifyAndPay() {

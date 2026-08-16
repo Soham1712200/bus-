@@ -211,14 +211,9 @@ $passengersJson = json_encode($passengers);
         </div>
         
         <h2 style="font-size:22px; font-weight:800; color:#0f172a; margin-bottom:6px;">Bank OTP Verification</h2>
-        <p style="font-size:13px; color:#64748b;">
-            One Time Password (OTP) has been sent to your registered mobile linked with <strong id="modalSelectedBankName">State Bank of India</strong>.
+        <p style="font-size:13px; color:#64748b; margin-bottom: 18px;">
+            Please enter the 6-digit OTP sent to your registered mobile number.
         </p>
-
-        <!-- One-Click Demo Helper -->
-        <div class="demo-otp-helper" onclick="NetBankingDemo.autofillDemoOtp()" title="Click to auto-fill">
-            <i class="fas fa-wand-magic-sparkles me-1"></i> Demo Mode: Click here to Auto-Fill <strong>123456</strong>
-        </div>
 
         <!-- 6 Digit OTP Fields -->
         <div class="otp-inputs-box">

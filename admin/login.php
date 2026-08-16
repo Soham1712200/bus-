@@ -95,24 +95,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['staff_login_submit'])
             </button>
         </form>
 
-        <!-- 1-Click Quick Demo Switcher -->
-        <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 10px; padding: 14px; font-size: 12px; color: #475569;">
-            <strong style="color: #0f172a; display: block; margin-bottom: 8px;">
-                <i class="fas fa-bolt text-primary me-1"></i> 1-Click Demo Staff Autofill:
-            </strong>
-            <div style="display: flex; flex-direction: column; gap: 6px;">
-                <button type="button" onclick="fillCreds('admin@jayambetravels.com', 'password123')" class="btn-sm" style="background:#0b132b; color:#fff; border:none; padding:6px 10px; border-radius:6px; text-align:left; cursor:pointer; font-weight:700;">
-                    <i class="fas fa-crown text-warning me-1"></i> SuperAdmin (Head Office Operations)
-                </button>
-                <button type="button" onclick="fillCreds('counter.ahmedabad@jayambetravels.com', 'password123')" class="btn-sm" style="background:#0284c7; color:#fff; border:none; padding:6px 10px; border-radius:6px; text-align:left; cursor:pointer; font-weight:700;">
-                    <i class="fas fa-store me-1"></i> Ahmedabad Counter Agent (Geeta Mandir)
-                </button>
-                <button type="button" onclick="fillCreds('counter.surat@jayambetravels.com', 'password123')" class="btn-sm" style="background:#0284c7; color:#fff; border:none; padding:6px 10px; border-radius:6px; text-align:left; cursor:pointer; font-weight:700;">
-                    <i class="fas fa-store me-1"></i> Surat Counter Agent (Ring Road)
-                </button>
-            </div>
-        </div>
-
         <div style="text-align: center; margin-top: 18px; font-size: 12px; color: #94a3b8;">
             <a href="../index.php" style="color: var(--primary); font-weight: 700;">
                 <i class="fas fa-arrow-left me-1"></i> Back to Public Website
@@ -120,12 +102,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['staff_login_submit'])
         </div>
 
     </div>
-
-    <script>
-        function fillCreds(email, pass) {
-            document.getElementById('staffEmailInput').value = email;
-            document.getElementById('staffPasswordInput').value = pass;
-        }
-    </script>
 </body>
 </html>
