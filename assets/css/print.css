@@ -1,0 +1,113 @@
+/* ==========================================================================
+   JAYAMBE TRAVELS - E-TICKET PRINT STYLESHEET
+   Optimized for physical printers and PDF exports
+   ========================================================================== */
+
+@media print {
+    /* Hide non-printable UI elements */
+    .top-bar,
+    .main-header,
+    .main-footer,
+    .ticket-actions-bar,
+    .btn,
+    .btn-ticket-print,
+    .flash-messages-container,
+    .search-widget-card,
+    .deck-tabs,
+    .btn-close {
+        display: none !important;
+    }
+
+    /* Reset body and page formatting */
+    html, body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        font-size: 11pt !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    .ticket-page-container {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .e-ticket-card {
+        border: 2px solid #000000 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        page-break-inside: avoid;
+    }
+
+    .ticket-header {
+        background: #ffffff !important;
+        color: #000000 !important;
+        border-bottom: 2px solid #000000 !important;
+        padding: 12px 18px !important;
+    }
+
+    .ticket-header h2 {
+        color: #000000 !important;
+        font-size: 16pt !important;
+    }
+
+    .pnr-highlight-box {
+        background: transparent !important;
+        border: 1.5px solid #000000 !important;
+        color: #000000 !important;
+    }
+
+    .pnr-highlight-box .pnr-val {
+        color: #000000 !important;
+        font-size: 14pt !important;
+    }
+
+    .ticket-body {
+        padding: 15px !important;
+    }
+
+    .ticket-route-grid {
+        background: #f8fafc !important;
+        border: 1px solid #000000 !important;
+        padding: 10px !important;
+        margin-bottom: 14px !important;
+    }
+
+    .ticket-table {
+        border: 1px solid #000000 !important;
+        width: 100% !important;
+    }
+
+    .ticket-table th {
+        background: #eeeeee !important;
+        color: #000000 !important;
+        border: 1px solid #000000 !important;
+        font-size: 10pt !important;
+    }
+
+    .ticket-table td {
+        border: 1px solid #000000 !important;
+        font-size: 10pt !important;
+    }
+
+    .ticket-footer-security {
+        border-top: 1px dashed #000000 !important;
+        padding-top: 10px !important;
+    }
+
+    .watermark-text {
+        position: absolute;
+        top: 40%;
+        left: 20%;
+        font-size: 40pt;
+        color: rgba(0, 0, 0, 0.05);
+        transform: rotate(-30deg);
+        pointer-events: none;
+        text-transform: uppercase;
+        font-weight: 900;
+    }
+}
