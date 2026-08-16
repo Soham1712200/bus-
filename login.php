@@ -3,10 +3,15 @@
  * Jayambe Travels - Passenger & Admin Login
  */
 
-$pageTitle = 'Login';
-require_once __DIR__ . '/includes/header.php';
+require_once __DIR__ . '/config/db.php';
+require_once __DIR__ . '/includes/functions.php';
+require_once __DIR__ . '/includes/auth.php';
 
 if (is_logged_in()) {
+    if (is_staff()) {
+        header('Location: admin/index.php');
+        exit;
+    }
     header('Location: my-bookings.php');
     exit;
 }
@@ -43,6 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login_submit'])) {
         set_flash('danger', 'Please enter your login credentials.');
     }
 }
+
+$pageTitle = 'Login';
+require_once __DIR__ . '/includes/header.php';
 ?>
 
 <div class="container" style="padding: 60px 20px 90px;">

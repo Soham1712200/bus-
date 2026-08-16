@@ -42,6 +42,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                 <span class="live-badge"><span class="live-dot"></span> Live Fleet Tracking Active</span>
                 <a href="routes.php"><i class="fas fa-clock me-1"></i> Today's Schedule</a>
                 <a href="print-ticket.php"><i class="fas fa-print me-1"></i> Quick Print</a>
+                <a href="admin/index.php" style="color: #38bdf8; font-weight:700; background: rgba(2, 132, 199, 0.2); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(56, 189, 248, 0.3);"><i class="fas fa-building text-info me-1"></i> Branch Office Portal</a>
             </div>
         </div>
     </div>
@@ -77,6 +78,11 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                 <!-- Header Actions (Auth / User Profile) -->
                 <div class="header-actions">
                     <?php if ($currentUser): ?>
+                        <?php if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counter_agent'): ?>
+                            <a href="admin/index.php" class="btn-nav-primary" style="background:#0284c7; box-shadow:none; padding:8px 14px;" title="Branch Office Operations Portal">
+                                <i class="fas fa-cash-register me-1"></i> Office Portal
+                            </a>
+                        <?php endif; ?>
                         <div class="user-profile-menu">
                             <a href="my-bookings.php" class="btn-user-badge">
                                 <span class="user-avatar"><?= strtoupper(substr($currentUser['name'], 0, 1)); ?></span>
@@ -88,6 +94,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                             <i class="fas fa-arrow-right-from-bracket"></i>
                         </a>
                     <?php else: ?>
+                        <a href="admin/login.php" class="nav-link" style="font-weight:700; color: #0284c7;"><i class="fas fa-shield-halved"></i> Staff Portal</a>
                         <a href="login.php" class="nav-link" style="font-weight:700;"><i class="fas fa-user-circle"></i> Login</a>
                         <a href="search.php" class="btn-nav-primary">
                             <i class="fas fa-ticket-simple"></i> Book Ticket

@@ -42,7 +42,12 @@ if ($pdo && $currentUser) {
             </div>
         </div>
 
-        <div>
+        <div style="display: flex; gap: 10px;">
+            <?php if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counter_agent'): ?>
+                <a href="admin/index.php" class="btn-search-bus" style="height: 44px; padding: 0 20px; background: #0284c7; border: none;">
+                    <i class="fas fa-cash-register me-1"></i> Office Portal
+                </a>
+            <?php endif; ?>
             <a href="search.php" class="btn-search-bus" style="height: 44px; padding: 0 20px;">
                 <i class="fas fa-ticket me-1"></i> Book New Bus
             </a>
