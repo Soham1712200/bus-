@@ -16,18 +16,21 @@ $refundInfo = null;
 
 // Handle Cancellation Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_cancellation'])) {
-    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+    // Validate raw CSRF token prior to any sanitization or logic
+    $rawCsrfToken = $_POST['csrf_token'] ?? '';
+    if (!verify_csrf_token($rawCsrfToken)) {
         set_flash('danger', 'Invalid security token. Please try again.');
         header('Location: cancel-ticket.php');
         exit;
     }
 
-    $bookingId = (int)$_POST['booking_id'];
-    $confirmPnr = sanitize($_POST['pnr']);
-    $refundAmount = (float)$_POST['refund_amount'];
-    $cancellationCharge = (float)$_POST['cancellation_charge'];
-    $reason = sanitize($_POST['cancellation_reason'] ?? 'Change of Plans');
-    $refundUpiId = sanitize($_POST['refund_upi_id'] ?? '');
+    // Safely extract and cast POST variables with null-coalescing fallbacks
+    $bookingId = (int)($_POST['booking_id'] ?? 0);
+    $confirmPnr = sanitize((string)($_POST['pnr'] ?? ''));
+    $refundAmount = (float)($_POST['refund_amount'] ?? 0.0);
+    $cancellationCharge = (float)($_POST['cancellation_charge'] ?? 0.0);
+    $reason = sanitize((string)($_POST['cancellation_reason'] ?? 'Change of Plans'));
+    $refundUpiId = sanitize((string)($_POST['refund_upi_id'] ?? ''));
 
     if ($pdo) {
         try {
