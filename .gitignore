@@ -2,3 +2,6 @@
 *.log
 scratch/
 .system_generated/
+
+vendor/
+composer.phar

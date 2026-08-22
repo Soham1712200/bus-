@@ -6,6 +6,7 @@
 
 $pageTitle = 'Demo Net Banking Payment';
 require_once __DIR__ . '/includes/header.php';
+require_once __DIR__ . '/config/stripe.php';
 
 $pdo = get_db_connection();
 
@@ -63,46 +64,41 @@ $passengersJson = json_encode($passengers);
 <div class="booking-checkout-container">
     <div style="text-align: center; margin-bottom: 30px;">
         <span class="section-tag">Step 2 of 2</span>
-        <h1 style="font-size: 28px; font-weight: 800; color: #0f172a;">UPI Payment Gateway</h1>
-        <p style="color: #64748b; font-size: 14px;">Complete your booking securely using UPI.</p>
+        <h1 style="font-size: 28px; font-weight: 800; color: #0f172a;">Secure Payment</h1>
+        <p style="color: #64748b; font-size: 14px;">Complete your booking securely using Stripe.</p>
     </div>
 
     <div style="display: grid; grid-template-columns: 1fr 340px; gap: 28px; align-items: start;">
         
-        <!-- UPI Payment Gateway -->
+        <!-- Stripe Payment Gateway -->
         <div>
-            <div class="netbanking-card" style="text-align: center;">
+            <div class="netbanking-card" style="text-align: left;">
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:16px; margin-bottom:20px;">
                     <div>
-                        <h3 style="font-size:18px; font-weight:800; color:#0f172a; text-align:left;"><i class="fas fa-qrcode text-primary me-2"></i> Scan & Pay with UPI</h3>
-                        <span style="font-size:12px; color:#64748b; display:block; text-align:left;">Secure UPI Payment Gateway</span>
+                        <h3 style="font-size:18px; font-weight:800; color:#0f172a;"><i class="fab fa-stripe text-primary me-2" style="font-size:24px; vertical-align:middle;"></i> Pay with Card</h3>
+                        <span style="font-size:12px; color:#64748b; display:block;">Powered by Stripe (Test Mode)</span>
                     </div>
                     <span class="badge" style="background:#d1fae5; color:#065f46; font-size:12px; padding:6px 12px; border-radius:999px; font-weight:700;">
-                        <i class="fas fa-lock me-1"></i> Secured
+                        <i class="fas fa-lock me-1"></i> SSL Secured
                     </span>
                 </div>
 
-                <div style="margin: 20px auto;">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=9081020835@ybl%26pn=Gopi+Travels%26am=<?= $grandTotal ?>%26cu=INR" alt="UPI QR Code" style="border: 2px solid #e2e8f0; border-radius: 12px; padding: 10px; max-width: 250px; background: white;">
+                <div style="margin-bottom: 20px;">
+                    <label class="form-label-custom" style="font-size:14px; margin-bottom: 8px; display:block;">Credit or Debit Card Details</label>
+                    <div id="card-element" style="border: 1px solid #cbd5e1; padding: 12px; border-radius: 8px; background: #f8fafc;">
+                        <!-- A Stripe Element will be inserted here. -->
+                    </div>
+                    <!-- Used to display form errors. -->
+                    <div id="card-errors" role="alert" style="color: #dc2626; font-size: 13px; margin-top: 8px;"></div>
                 </div>
-
-                <div style="font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 5px;">UPI ID: <span style="color: var(--primary);">9081020835@ybl</span></div>
-                <div style="font-size: 14px; color: #64748b; margin-bottom: 20px;">Scan the QR code using any UPI app (GPay, PhonePe, Paytm, etc.) to complete the payment of <strong><?= format_price($grandTotal); ?></strong>.</div>
-
-                <!-- Simulated UTR Form -->
-                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:20px; margin:20px 0; text-align: left;">
-                    <div style="font-size:14px; font-weight:700; color:#0f172a; margin-bottom:14px;">
-                        <i class="fas fa-check-double text-emerald me-1"></i> Verify Payment
-                    </div>
-                    <div>
-                        <label class="form-label-custom" style="font-size:11px;">Enter 12-digit UTR / Reference No. after successful payment</label>
-                        <input type="text" id="utrNumber" class="form-control-custom" style="height:42px; font-size:13px;" placeholder="e.g. 123456789012" required pattern="\d{12}">
-                    </div>
+                
+                <div style="font-size: 13px; color: #64748b; margin-bottom: 20px;">
+                    <i class="fas fa-info-circle me-1"></i> Note: This is a demo application. Use Stripe test cards (e.g. 4242 4242 4242 4242).
                 </div>
 
                 <div style="text-align: center;">
-                    <button type="button" id="btnConfirmUpiPay" class="btn-proceed-booking" style="width: 100%; padding: 14px 32px;" onclick="verifyUPIPayment()">
-                        <i class="fas fa-shield-check me-2"></i> Confirm Payment & Book Ticket &rarr;
+                    <button type="button" id="btnConfirmStripePay" class="btn-proceed-booking" style="width: 100%; padding: 14px 32px;" onclick="processStripePayment()">
+                        <i class="fas fa-shield-check me-2"></i> Pay <?= format_price($grandTotal); ?> & Book &rarr;
                     </button>
                 </div>
             </div>
@@ -168,28 +164,68 @@ $passengersJson = json_encode($passengers);
     </div>
 </div>
 
+<script src="https://js.stripe.com/v3/"></script>
 <script>
-function verifyUPIPayment() {
-    const utr = document.getElementById('utrNumber').value.trim();
-    if (utr.length !== 12 || isNaN(utr)) {
-        alert("Please enter a valid 12-digit UTR number.");
-        return;
+// Initialize Stripe
+var stripe = Stripe('<?= STRIPE_PUBLISHABLE_KEY ?>');
+var elements = stripe.elements();
+
+// Custom styling can be passed to options when creating an Element.
+var style = {
+  base: {
+    color: '#0f172a',
+    fontFamily: '"Inter", Helvetica, sans-serif',
+    fontSmoothing: 'antialiased',
+    fontSize: '16px',
+    '::placeholder': {
+      color: '#94a3b8'
     }
-    
-    const btn = document.getElementById('btnConfirmUpiPay');
+  },
+  invalid: {
+    color: '#dc2626',
+    iconColor: '#dc2626'
+  }
+};
+
+// Create an instance of the card Element.
+var card = elements.create('card', {style: style});
+card.mount('#card-element');
+
+// Handle real-time validation errors from the card Element.
+card.on('change', function(event) {
+  var displayError = document.getElementById('card-errors');
+  if (event.error) {
+    displayError.textContent = event.error.message;
+  } else {
+    displayError.textContent = '';
+  }
+});
+
+function processStripePayment() {
+    var btn = document.getElementById('btnConfirmStripePay');
     btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Verifying Payment...';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Processing Securely...';
     
-    // Simulate banking network roundtrip
-    setTimeout(() => {
-        document.getElementById('paymentMethodInput').value = 'UPI (UTR: ' + utr + ')';
-        document.getElementById('bookingPaymentForm').submit();
-    }, 1500);
+    stripe.createToken(card).then(function(result) {
+        if (result.error) {
+            // Inform the user if there was an error.
+            var errorElement = document.getElementById('card-errors');
+            errorElement.textContent = result.error.message;
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-shield-check me-2"></i> Pay <?= format_price($grandTotal); ?> & Book &rarr;';
+        } else {
+            // Send the token to your server.
+            document.getElementById('stripeTokenInput').value = result.token.id;
+            document.getElementById('paymentMethodInput').value = 'Stripe Card';
+            document.getElementById('bookingPaymentForm').submit();
+        }
+    });
 }
 </script>
 
 <!-- Hidden Actual Form that submits to process-booking.php -->
 <form action="process-booking.php" method="POST" id="bookingPaymentForm" style="display:none;">
+    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()); ?>">
     <input type="hidden" name="bus_id" value="<?= $bus['id']; ?>">
     <input type="hidden" name="journey_date" value="<?= htmlspecialchars($journeyDate); ?>">
     <input type="hidden" name="seat_numbers" value="<?= htmlspecialchars($seatNumbersStr); ?>">
@@ -200,7 +236,8 @@ function verifyUPIPayment() {
     <input type="hidden" name="base_fare" value="<?= $baseFare; ?>">
     <input type="hidden" name="gst_amount" value="<?= $gstAmount; ?>">
     <input type="hidden" name="total_amount" value="<?= $grandTotal; ?>">
-    <input type="hidden" name="payment_method" id="paymentMethodInput" value="UPI">
+    <input type="hidden" name="payment_method" id="paymentMethodInput" value="Stripe Card">
+    <input type="hidden" name="stripeToken" id="stripeTokenInput" value="">
 </form>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

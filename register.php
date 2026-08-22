@@ -17,6 +17,12 @@ $email = '';
 $phone = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register_submit'])) {
+    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+        set_flash('danger', 'Invalid security token. Please try again.');
+        header('Location: register.php');
+        exit;
+    }
+
     $name = sanitize($_POST['name'] ?? '');
     $email = sanitize($_POST['email'] ?? '');
     $phone = sanitize($_POST['phone'] ?? '');
@@ -71,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register_submit'])) {
             </div>
 
             <form action="register.php" method="POST">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()); ?>">
                 <div class="form-group-custom" style="margin-bottom: 14px;">
                     <label class="form-label-custom"><i class="fas fa-user"></i> Full Name</label>
                     <input type="text" name="name" class="form-control-custom" placeholder="e.g. Ramesh Patel" value="<?= htmlspecialchars($name); ?>" required>

@@ -16,6 +16,12 @@ $refundInfo = null;
 
 // Handle Cancellation Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_cancellation'])) {
+    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+        set_flash('danger', 'Invalid security token. Please try again.');
+        header('Location: cancel-ticket.php');
+        exit;
+    }
+
     $bookingId = (int)$_POST['booking_id'];
     $confirmPnr = sanitize($_POST['pnr']);
     $refundAmount = (float)$_POST['refund_amount'];
@@ -198,6 +204,7 @@ if ($booking && $booking['booking_status'] === 'Confirmed') {
 
                 <!-- Cancellation Form -->
                 <form action="cancel-ticket.php" method="POST" onsubmit="return confirm('Are you sure you want to cancel ticket <?= $booking['booking_reference']; ?>? This action is irreversible.');">
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()); ?>">
                     <input type="hidden" name="booking_id" value="<?= $booking['id']; ?>">
                     <input type="hidden" name="pnr" value="<?= htmlspecialchars($booking['booking_reference']); ?>">
                     <input type="hidden" name="refund_amount" value="<?= $refundAmount; ?>">

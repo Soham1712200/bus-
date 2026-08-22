@@ -7,9 +7,17 @@
 require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/config/stripe.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['bus_id']) || empty($_POST['seat_numbers'])) {
     set_flash('danger', 'Invalid booking request.');
+    header('Location: search.php');
+    exit;
+}
+
+if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+    set_flash('danger', 'Invalid security token. Please try again.');
     header('Location: search.php');
     exit;
 }
@@ -44,11 +52,33 @@ foreach ($seatNumbers as $st) {
     }
 }
 
-// Generate unique PNR and Transaction ID
+// Generate unique PNR and default Transaction ID
 $pnr = generate_pnr();
 $txnId = generate_txn_id();
 $currentUser = current_user();
 $userId = $currentUser ? (int)$currentUser['id'] : null;
+
+// Handle Stripe Payment
+if (stripos($paymentMethod, 'Stripe') !== false && !empty($_POST['stripeToken'])) {
+    try {
+        \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+        $charge = \Stripe\Charge::create([
+            'amount' => round($totalAmount * 100), // amount in paise
+            'currency' => 'inr',
+            'description' => "Booking PNR: {$pnr}",
+            'source' => sanitize($_POST['stripeToken']),
+        ]);
+        $txnId = 'STRIPE-' . $charge->id;
+    } catch (\Stripe\Exception\CardException $e) {
+        set_flash('danger', 'Card was declined: ' . $e->getError()->message);
+        header("Location: search.php?journey_date={$journeyDate}");
+        exit;
+    } catch (\Stripe\Exception\ApiErrorException $e) {
+        set_flash('danger', 'Payment Gateway error. Please try again later.');
+        header("Location: search.php?journey_date={$journeyDate}");
+        exit;
+    }
+}
 
 try {
     $stmt = $pdo->prepare("INSERT INTO bookings (

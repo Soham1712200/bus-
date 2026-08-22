@@ -20,6 +20,12 @@ $pdo = get_db_connection();
 $email = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login_submit'])) {
+    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+        set_flash('danger', 'Invalid security token. Please try again.');
+        header('Location: login.php');
+        exit;
+    }
+
     $email = sanitize($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
 
@@ -67,6 +73,7 @@ require_once __DIR__ . '/includes/header.php';
             </div>
 
             <form action="login.php" method="POST">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()); ?>">
                 <div class="form-group-custom" style="margin-bottom: 16px;">
                     <label class="form-label-custom"><i class="fas fa-envelope"></i> Email or Mobile Number</label>
                     <input type="text" name="email" class="form-control-custom" placeholder="demo@gopitravels.com" value="<?= htmlspecialchars($email); ?>" required>
