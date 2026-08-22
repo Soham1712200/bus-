@@ -63,81 +63,46 @@ $passengersJson = json_encode($passengers);
 <div class="booking-checkout-container">
     <div style="text-align: center; margin-bottom: 30px;">
         <span class="section-tag">Step 2 of 2</span>
-        <h1 style="font-size: 28px; font-weight: 800; color: #0f172a;">Demo Net Banking Payment Gateway</h1>
-        <p style="color: #64748b; font-size: 14px;">Select your bank and complete the interactive OTP verification simulation.</p>
+        <h1 style="font-size: 28px; font-weight: 800; color: #0f172a;">UPI Payment Gateway</h1>
+        <p style="color: #64748b; font-size: 14px;">Complete your booking securely using UPI.</p>
     </div>
 
     <div style="display: grid; grid-template-columns: 1fr 340px; gap: 28px; align-items: start;">
         
-        <!-- Net Banking Selector & Gateway -->
+        <!-- UPI Payment Gateway -->
         <div>
-            <div class="netbanking-card">
+            <div class="netbanking-card" style="text-align: center;">
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:16px; margin-bottom:20px;">
                     <div>
-                        <h3 style="font-size:18px; font-weight:800; color:#0f172a;"><i class="fas fa-building-columns text-primary me-2"></i> Select Net Banking</h3>
-                        <span style="font-size:12px; color:#64748b;">Simulated Net Banking Environment (RBI Mock)</span>
+                        <h3 style="font-size:18px; font-weight:800; color:#0f172a; text-align:left;"><i class="fas fa-qrcode text-primary me-2"></i> Scan & Pay with UPI</h3>
+                        <span style="font-size:12px; color:#64748b; display:block; text-align:left;">Secure UPI Payment Gateway</span>
                     </div>
                     <span class="badge" style="background:#d1fae5; color:#065f46; font-size:12px; padding:6px 12px; border-radius:999px; font-weight:700;">
-                        <i class="fas fa-lock me-1"></i> 256-Bit SSL Encrypted
+                        <i class="fas fa-lock me-1"></i> Secured
                     </span>
                 </div>
 
-                <div style="font-size:13px; font-weight:700; color:#334155; margin-bottom:10px;">Popular Indian Banks:</div>
-                <div class="bank-grid-selector">
-                    <div class="bank-item-option selected" data-bank="State Bank of India">
-                        <i class="fas fa-landmark bank-logo-icon" style="color:#0072bc;"></i>
-                        <span>State Bank of India</span>
-                    </div>
-                    <div class="bank-item-option" data-bank="HDFC Bank">
-                        <i class="fas fa-building-columns bank-logo-icon" style="color:#004c8f;"></i>
-                        <span>HDFC Bank</span>
-                    </div>
-                    <div class="bank-item-option" data-bank="ICICI Bank">
-                        <i class="fas fa-university bank-logo-icon" style="color:#bd2227;"></i>
-                        <span>ICICI Bank</span>
-                    </div>
-                    <div class="bank-item-option" data-bank="Axis Bank">
-                        <i class="fas fa-vault bank-logo-icon" style="color:#861f41;"></i>
-                        <span>Axis Bank</span>
-                    </div>
-                    <div class="bank-item-option" data-bank="Bank of Baroda">
-                        <i class="fas fa-building bank-logo-icon" style="color:#f26522;"></i>
-                        <span>Bank of Baroda</span>
-                    </div>
-                    <div class="bank-item-option" data-bank="Kotak Mahindra Bank">
-                        <i class="fas fa-landmark-dome bank-logo-icon" style="color:#ed1c24;"></i>
-                        <span>Kotak Mahindra</span>
-                    </div>
-                    <div class="bank-item-option" data-bank="Punjab National Bank">
-                        <i class="fas fa-building-ngo bank-logo-icon" style="color:#9e1b32;"></i>
-                        <span>Punjab National</span>
-                    </div>
-                    <div class="bank-item-option" data-bank="Canara Bank">
-                        <i class="fas fa-landmark-flag bank-logo-icon" style="color:#0093dd;"></i>
-                        <span>Canara Bank</span>
-                    </div>
+                <div style="margin: 20px auto;">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=9081020835@ybl%26pn=Jayambe+Travels%26am=<?= $grandTotal ?>%26cu=INR" alt="UPI QR Code" style="border: 2px solid #e2e8f0; border-radius: 12px; padding: 10px; max-width: 250px; background: white;">
                 </div>
 
-                <!-- Simulated Credentials Form -->
-                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:20px; margin:20px 0;">
+                <div style="font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 5px;">UPI ID: <span style="color: var(--primary);">9081020835@ybl</span></div>
+                <div style="font-size: 14px; color: #64748b; margin-bottom: 20px;">Scan the QR code using any UPI app (GPay, PhonePe, Paytm, etc.) to complete the payment of <strong><?= format_price($grandTotal); ?></strong>.</div>
+
+                <!-- Simulated UTR Form -->
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:20px; margin:20px 0; text-align: left;">
                     <div style="font-size:14px; font-weight:700; color:#0f172a; margin-bottom:14px;">
-                        <i class="fas fa-shield-halved text-emerald me-1"></i> Net Banking Login Credentials Simulation
+                        <i class="fas fa-check-double text-emerald me-1"></i> Verify Payment
                     </div>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
-                        <div>
-                            <label class="form-label-custom" style="font-size:11px;">Customer User ID</label>
-                            <input type="text" class="form-control-custom" style="height:42px; font-size:13px;" value="JAY_CUST_9824" placeholder="Enter User ID" required>
-                        </div>
-                        <div>
-                            <label class="form-label-custom" style="font-size:11px;">Internet Banking Password</label>
-                            <input type="password" class="form-control-custom" style="height:42px; font-size:13px;" value="••••••••••••" placeholder="Enter Password" required>
-                        </div>
+                    <div>
+                        <label class="form-label-custom" style="font-size:11px;">Enter 12-digit UTR / Reference No. after successful payment</label>
+                        <input type="text" id="utrNumber" class="form-control-custom" style="height:42px; font-size:13px;" placeholder="e.g. 123456789012" required pattern="\d{12}">
                     </div>
                 </div>
 
-                <div style="text-align: right;">
-                    <button type="button" class="btn-proceed-booking" style="width: auto; padding: 14px 32px; display: inline-flex;" onclick="NetBankingDemo.openOtpModal()">
-                        <i class="fas fa-shield-check me-2"></i> Authenticate & Proceed to OTP &rarr;
+                <div style="text-align: center;">
+                    <button type="button" id="btnConfirmUpiPay" class="btn-proceed-booking" style="width: 100%; padding: 14px 32px;" onclick="verifyUPIPayment()">
+                        <i class="fas fa-shield-check me-2"></i> Confirm Payment & Book Ticket &rarr;
                     </button>
                 </div>
             </div>
@@ -203,43 +168,25 @@ $passengersJson = json_encode($passengers);
     </div>
 </div>
 
-<!-- Simulated Interactive OTP Modal Overlay -->
-<div class="otp-modal-overlay" id="otpModalOverlay" style="display: none;">
-    <div class="otp-modal-card">
-        <div class="otp-icon-wrap">
-            <i class="fas fa-shield-halved"></i>
-        </div>
-        
-        <h2 style="font-size:22px; font-weight:800; color:#0f172a; margin-bottom:6px;">Bank OTP Verification</h2>
-        <p style="font-size:13px; color:#64748b; margin-bottom: 18px;">
-            Please enter the 6-digit OTP sent to your registered mobile number.
-        </p>
-
-        <!-- 6 Digit OTP Fields -->
-        <div class="otp-inputs-box">
-            <input type="text" maxlength="1" class="otp-digit-field" pattern="[0-9]" inputmode="numeric">
-            <input type="text" maxlength="1" class="otp-digit-field" pattern="[0-9]" inputmode="numeric">
-            <input type="text" maxlength="1" class="otp-digit-field" pattern="[0-9]" inputmode="numeric">
-            <input type="text" maxlength="1" class="otp-digit-field" pattern="[0-9]" inputmode="numeric">
-            <input type="text" maxlength="1" class="otp-digit-field" pattern="[0-9]" inputmode="numeric">
-            <input type="text" maxlength="1" class="otp-digit-field" pattern="[0-9]" inputmode="numeric">
-        </div>
-
-        <div class="otp-timer-text">
-            Time Remaining: <strong id="otpTimerCountdown" style="color:var(--primary);">01:00</strong>
-            <button type="button" id="btnResendOtp" style="display:none; background:none; border:none; color:var(--primary); font-weight:700; cursor:pointer; text-decoration:underline; margin-left:8px;" onclick="NetBankingDemo.startTimer()">Resend OTP</button>
-        </div>
-
-        <div style="display:flex; gap:12px;">
-            <button type="button" class="btn-proceed-booking" style="background:#cbd5e1; color:#334155; box-shadow:none; flex:1;" onclick="NetBankingDemo.closeOtpModal()">
-                Cancel
-            </button>
-            <button type="button" class="btn-proceed-booking" id="btnConfirmOtpPay" style="flex:2;" onclick="NetBankingDemo.verifyAndPay()">
-                <i class="fas fa-check-circle me-1"></i> Confirm & Pay <?= format_price($grandTotal); ?>
-            </button>
-        </div>
-    </div>
-</div>
+<script>
+function verifyUPIPayment() {
+    const utr = document.getElementById('utrNumber').value.trim();
+    if (utr.length !== 12 || isNaN(utr)) {
+        alert("Please enter a valid 12-digit UTR number.");
+        return;
+    }
+    
+    const btn = document.getElementById('btnConfirmUpiPay');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Verifying Payment...';
+    
+    // Simulate banking network roundtrip
+    setTimeout(() => {
+        document.getElementById('paymentMethodInput').value = 'UPI (UTR: ' + utr + ')';
+        document.getElementById('bookingPaymentForm').submit();
+    }, 1500);
+}
+</script>
 
 <!-- Hidden Actual Form that submits to process-booking.php -->
 <form action="process-booking.php" method="POST" id="bookingPaymentForm" style="display:none;">
@@ -253,7 +200,7 @@ $passengersJson = json_encode($passengers);
     <input type="hidden" name="base_fare" value="<?= $baseFare; ?>">
     <input type="hidden" name="gst_amount" value="<?= $gstAmount; ?>">
     <input type="hidden" name="total_amount" value="<?= $grandTotal; ?>">
-    <input type="hidden" name="selected_bank" id="selectedBankInput" value="State Bank of India">
+    <input type="hidden" name="payment_method" id="paymentMethodInput" value="UPI">
 </form>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

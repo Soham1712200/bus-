@@ -32,7 +32,7 @@ $passengersJson = $_POST['passengers_json'] ?? '[]';
 $baseFare = (float)$_POST['base_fare'];
 $gstAmount = (float)$_POST['gst_amount'];
 $totalAmount = (float)$_POST['total_amount'];
-$selectedBank = sanitize($_POST['selected_bank'] ?? 'State Bank of India');
+$paymentMethod = sanitize($_POST['payment_method'] ?? 'UPI');
 
 // Re-verify that seats were not booked in the meantime
 $alreadyBooked = get_booked_seats($busId, $journeyDate);
@@ -67,7 +67,7 @@ try {
         $baseFare,
         $gstAmount,
         $totalAmount,
-        "Net Banking ({$selectedBank})",
+        $paymentMethod,
         $txnId,
         $passengerName,
         $contactPhone,
