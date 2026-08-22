@@ -4,9 +4,11 @@
  * Simulates Indian Net Banking with interactive OTP prompt and bank authorization
  */
 
-$pageTitle = 'Demo Net Banking Payment';
+$pageTitle = 'Secure Payment';
 require_once __DIR__ . '/includes/header.php';
-require_once __DIR__ . '/config/stripe.php';
+require_once __DIR__ . '/config/razorpay.php';
+require_once __DIR__ . '/vendor/autoload.php';
+use Razorpay\Api\Api;
 
 $pdo = get_db_connection();
 
@@ -58,49 +60,67 @@ foreach ($seatNumbers as $idx => $seat) {
         'seat' => $seat
     ];
 }
+}
 $passengersJson = json_encode($passengers);
+
+$razorpayOrderId = null;
+$razorpayError = null;
+try {
+    $api = new Api(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET);
+    $orderData = [
+        'receipt'         => 'rcptid_' . rand(1000, 9999),
+        'amount'          => round($grandTotal * 100), // amount in paise
+        'currency'        => 'INR',
+        'payment_capture' => 1 // auto capture
+    ];
+    $razorpayOrder = $api->order->create($orderData);
+    $razorpayOrderId = $razorpayOrder['id'];
+} catch (Exception $e) {
+    $razorpayError = $e->getMessage();
+}
 ?>
 
 <div class="booking-checkout-container">
     <div style="text-align: center; margin-bottom: 30px;">
         <span class="section-tag">Step 2 of 2</span>
         <h1 style="font-size: 28px; font-weight: 800; color: #0f172a;">Secure Payment</h1>
-        <p style="color: #64748b; font-size: 14px;">Complete your booking securely using Stripe.</p>
+        <p style="color: #64748b; font-size: 14px;">Complete your booking securely using Razorpay.</p>
     </div>
 
     <div style="display: grid; grid-template-columns: 1fr 340px; gap: 28px; align-items: start;">
         
-        <!-- Stripe Payment Gateway -->
+        <!-- Razorpay Payment Gateway -->
         <div>
             <div class="netbanking-card" style="text-align: left;">
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:16px; margin-bottom:20px;">
                     <div>
-                        <h3 style="font-size:18px; font-weight:800; color:#0f172a;"><i class="fab fa-stripe text-primary me-2" style="font-size:24px; vertical-align:middle;"></i> Pay with Card</h3>
-                        <span style="font-size:12px; color:#64748b; display:block;">Powered by Stripe (Test Mode)</span>
+                        <h3 style="font-size:18px; font-weight:800; color:#0f172a;"><i class="fas fa-credit-card text-primary me-2"></i> Pay Online</h3>
+                        <span style="font-size:12px; color:#64748b; display:block;">Powered by Razorpay (Test Mode)</span>
                     </div>
                     <span class="badge" style="background:#d1fae5; color:#065f46; font-size:12px; padding:6px 12px; border-radius:999px; font-weight:700;">
                         <i class="fas fa-lock me-1"></i> SSL Secured
                     </span>
                 </div>
 
-                <div style="margin-bottom: 20px;">
-                    <label class="form-label-custom" style="font-size:14px; margin-bottom: 8px; display:block;">Credit or Debit Card Details</label>
-                    <div id="card-element" style="border: 1px solid #cbd5e1; padding: 12px; border-radius: 8px; background: #f8fafc;">
-                        <!-- A Stripe Element will be inserted here. -->
+                <?php if (empty($razorpayOrderId)): ?>
+                    <div class="alert alert-danger" style="font-size: 14px;">
+                        <strong><i class="fas fa-exclamation-triangle"></i> Configuration Error:</strong><br>
+                        Unable to initialize Razorpay Order. Please ensure your Test API Keys are correctly configured in <code>config/razorpay.php</code>.
+                        <div style="margin-top: 8px; font-family: monospace; font-size: 12px; background: rgba(0,0,0,0.05); padding: 6px; border-radius: 4px;">
+                            <?= htmlspecialchars($razorpayError ?? 'Unknown error') ?>
+                        </div>
                     </div>
-                    <!-- Used to display form errors. -->
-                    <div id="card-errors" role="alert" style="color: #dc2626; font-size: 13px; margin-top: 8px;"></div>
-                </div>
-                
-                <div style="font-size: 13px; color: #64748b; margin-bottom: 20px;">
-                    <i class="fas fa-info-circle me-1"></i> Note: This is a demo application. Use Stripe test cards (e.g. 4242 4242 4242 4242).
-                </div>
+                <?php else: ?>
+                    <div style="font-size: 13px; color: #64748b; margin-bottom: 20px; line-height: 1.5;">
+                        <i class="fas fa-info-circle me-1"></i> You will be redirected to the Razorpay secure checkout window. You can use any test UPI or Card details to complete this demo payment.
+                    </div>
 
-                <div style="text-align: center;">
-                    <button type="button" id="btnConfirmStripePay" class="btn-proceed-booking" style="width: 100%; padding: 14px 32px;" onclick="processStripePayment()">
-                        <i class="fas fa-shield-check me-2"></i> Pay <?= format_price($grandTotal); ?> & Book &rarr;
-                    </button>
-                </div>
+                    <div style="text-align: center;">
+                        <button type="button" id="btnConfirmPay" class="btn-proceed-booking" style="width: 100%; padding: 14px 32px;" onclick="openRazorpayCheckout()">
+                            <i class="fas fa-shield-check me-2"></i> Pay <?= format_price($grandTotal); ?> & Book &rarr;
+                        </button>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -164,64 +184,48 @@ $passengersJson = json_encode($passengers);
     </div>
 </div>
 
-<script src="https://js.stripe.com/v3/"></script>
+<?php if (!empty($razorpayOrderId)): ?>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-// Initialize Stripe
-var stripe = Stripe('<?= STRIPE_PUBLISHABLE_KEY ?>');
-var elements = stripe.elements();
-
-// Custom styling can be passed to options when creating an Element.
-var style = {
-  base: {
-    color: '#0f172a',
-    fontFamily: '"Inter", Helvetica, sans-serif',
-    fontSmoothing: 'antialiased',
-    fontSize: '16px',
-    '::placeholder': {
-      color: '#94a3b8'
+var options = {
+    "key": "<?= RAZORPAY_KEY_ID ?>",
+    "amount": "<?= round($grandTotal * 100) ?>", 
+    "currency": "INR",
+    "name": "Gopi Travels",
+    "description": "Bus Ticket Booking",
+    "image": "https://cdn-icons-png.flaticon.com/512/1036/1036145.png",
+    "order_id": "<?= $razorpayOrderId ?>",
+    "handler": function (response){
+        // Populate hidden fields and submit
+        document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+        document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+        document.getElementById('razorpay_signature').value = response.razorpay_signature;
+        document.getElementById('paymentMethodInput').value = 'Razorpay';
+        
+        var btn = document.getElementById('btnConfirmPay');
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Confirming Payment...';
+        btn.disabled = true;
+        
+        document.getElementById('bookingPaymentForm').submit();
+    },
+    "prefill": {
+        "name": "<?= htmlspecialchars($passengers[0]['name'] ?? 'Passenger') ?>",
+        "email": "<?= htmlspecialchars($contactEmail) ?>",
+        "contact": "<?= htmlspecialchars($contactPhone) ?>"
+    },
+    "theme": {
+        "color": "#0284c7"
     }
-  },
-  invalid: {
-    color: '#dc2626',
-    iconColor: '#dc2626'
-  }
 };
-
-// Create an instance of the card Element.
-var card = elements.create('card', {style: style});
-card.mount('#card-element');
-
-// Handle real-time validation errors from the card Element.
-card.on('change', function(event) {
-  var displayError = document.getElementById('card-errors');
-  if (event.error) {
-    displayError.textContent = event.error.message;
-  } else {
-    displayError.textContent = '';
-  }
+var rzp1 = new Razorpay(options);
+rzp1.on('payment.failed', function (response){
+        alert("Payment Failed: " + response.error.description);
 });
-
-function processStripePayment() {
-    var btn = document.getElementById('btnConfirmStripePay');
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Processing Securely...';
-    
-    stripe.createToken(card).then(function(result) {
-        if (result.error) {
-            // Inform the user if there was an error.
-            var errorElement = document.getElementById('card-errors');
-            errorElement.textContent = result.error.message;
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-shield-check me-2"></i> Pay <?= format_price($grandTotal); ?> & Book &rarr;';
-        } else {
-            // Send the token to your server.
-            document.getElementById('stripeTokenInput').value = result.token.id;
-            document.getElementById('paymentMethodInput').value = 'Stripe Card';
-            document.getElementById('bookingPaymentForm').submit();
-        }
-    });
+function openRazorpayCheckout() {
+    rzp1.open();
 }
 </script>
+<?php endif; ?>
 
 <!-- Hidden Actual Form that submits to process-booking.php -->
 <form action="process-booking.php" method="POST" id="bookingPaymentForm" style="display:none;">
@@ -236,8 +240,10 @@ function processStripePayment() {
     <input type="hidden" name="base_fare" value="<?= $baseFare; ?>">
     <input type="hidden" name="gst_amount" value="<?= $gstAmount; ?>">
     <input type="hidden" name="total_amount" value="<?= $grandTotal; ?>">
-    <input type="hidden" name="payment_method" id="paymentMethodInput" value="Stripe Card">
-    <input type="hidden" name="stripeToken" id="stripeTokenInput" value="">
+    <input type="hidden" name="payment_method" id="paymentMethodInput" value="Razorpay">
+    <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id" value="">
+    <input type="hidden" name="razorpay_order_id" id="razorpay_order_id" value="">
+    <input type="hidden" name="razorpay_signature" id="razorpay_signature" value="">
 </form>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

@@ -7,8 +7,10 @@
 require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/includes/auth.php';
-require_once __DIR__ . '/config/stripe.php';
+require_once __DIR__ . '/config/razorpay.php';
 require_once __DIR__ . '/vendor/autoload.php';
+use Razorpay\Api\Api;
+use Razorpay\Api\Errors\SignatureVerificationError;
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['bus_id']) || empty($_POST['seat_numbers'])) {
     set_flash('danger', 'Invalid booking request.');
@@ -58,23 +60,19 @@ $txnId = generate_txn_id();
 $currentUser = current_user();
 $userId = $currentUser ? (int)$currentUser['id'] : null;
 
-// Handle Stripe Payment
-if (stripos($paymentMethod, 'Stripe') !== false && !empty($_POST['stripeToken'])) {
+// Handle Razorpay Payment
+if (stripos($paymentMethod, 'Razorpay') !== false && !empty($_POST['razorpay_payment_id'])) {
     try {
-        \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
-        $charge = \Stripe\Charge::create([
-            'amount' => round($totalAmount * 100), // amount in paise
-            'currency' => 'inr',
-            'description' => "Booking PNR: {$pnr}",
-            'source' => sanitize($_POST['stripeToken']),
-        ]);
-        $txnId = 'STRIPE-' . $charge->id;
-    } catch (\Stripe\Exception\CardException $e) {
-        set_flash('danger', 'Card was declined: ' . $e->getError()->message);
-        header("Location: search.php?journey_date={$journeyDate}");
-        exit;
-    } catch (\Stripe\Exception\ApiErrorException $e) {
-        set_flash('danger', 'Payment Gateway error. Please try again later.');
+        $api = new Api(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET);
+        $attributes = [
+            'razorpay_order_id' => $_POST['razorpay_order_id'],
+            'razorpay_payment_id' => $_POST['razorpay_payment_id'],
+            'razorpay_signature' => $_POST['razorpay_signature']
+        ];
+        $api->utility->verifyPaymentSignature($attributes);
+        $txnId = 'RZP-' . sanitize($_POST['razorpay_payment_id']);
+    } catch (SignatureVerificationError $e) {
+        set_flash('danger', 'Payment verification failed: ' . $e->getMessage());
         header("Location: search.php?journey_date={$journeyDate}");
         exit;
     }
