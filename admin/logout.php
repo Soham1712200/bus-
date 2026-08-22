@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Staff Logout
+ * Gopi Travels - Staff Logout
  */
 
 require_once __DIR__ . '/../config/db.php';

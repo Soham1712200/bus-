@@ -34,13 +34,13 @@
 
   <!-- Brand Typography -->
   <g transform="translate(86, 26)">
-    <!-- Jayambe Text -->
+    <!-- Gopi Text -->
     <text x="0" y="16" font-family="'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif" font-size="24" font-weight="900" fill="#ffffff" letter-spacing="-0.5">
-      JAYAMBE
+      GOPI
     </text>
     
     <!-- Travels Text with Saffron gradient -->
-    <text x="122" y="16" font-family="'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif" font-size="24" font-weight="900" fill="#f97316" letter-spacing="-0.5">
+    <text x="72" y="16" font-family="'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif" font-size="24" font-weight="900" fill="#f97316" letter-spacing="-0.5">
       TRAVELS
     </text>
     

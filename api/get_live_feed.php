@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Live Activity Feed API
+ * Gopi Travels - Live Activity Feed API
  * Returns real-time reservation stream for Admin Dashboard
  */
 

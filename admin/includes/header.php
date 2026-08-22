@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Admin & Branch Office Portal Header
+ * Gopi Travels - Admin & Branch Office Portal Header
  */
 
 require_once __DIR__ . '/auth_guard.php';
@@ -12,7 +12,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= isset($pageTitle) ? htmlspecialchars($pageTitle) . ' | Office Portal - Jayambe Travels' : 'Office Portal - Jayambe Travels'; ?></title>
+    <title><?= isset($pageTitle) ? htmlspecialchars($pageTitle) . ' | Office Portal - Gopi Travels' : 'Office Portal - Gopi Travels'; ?></title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,10 +55,10 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         <div class="admin-navbar-inner">
             <!-- Brand Logo -->
             <a href="index.php" class="brand-logo" style="gap: 12px;">
-                <img src="../assets/images/logo.svg" alt="Jayambe Travels" style="height: 42px; width: auto; max-width: 200px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <img src="../assets/images/logo.svg" alt="Gopi Travels" style="height: 42px; width: auto; max-width: 200px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                 <div style="display:none; align-items:center; gap:8px;">
                     <div class="logo-symbol" style="width:36px; height:36px; font-size:18px;"><i class="fas fa-bus-simple"></i></div>
-                    <div class="brand-name" style="font-size:18px;">Jayambe <span>Travels</span></div>
+                    <div class="brand-name" style="font-size:18px;">Gopi <span>Travels</span></div>
                 </div>
                 <span style="background: #ea580c; color: #fff; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">
                     OFFICE PORTAL

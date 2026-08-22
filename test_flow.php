@@ -1,12 +1,12 @@
 <?php
 /**
- * Jayambe Travels - Comprehensive Automated Verification Script (Customer + Admin & Branch Office Portal)
+ * Gopi Travels - Comprehensive Automated Verification Script (Customer + Admin & Branch Office Portal)
  */
 
 echo "=== JAYAMBE TRAVELS AUTOMATED END-TO-END VERIFICATION ===\n\n";
 
 $baseUrl = 'http://localhost/bus';
-$cookieFile = sys_get_temp_dir() . '/jayambe_test_cookie.txt';
+$cookieFile = sys_get_temp_dir() . '/gopi_test_cookie.txt';
 if (file_exists($cookieFile)) unlink($cookieFile);
 
 function test_url($url, $method = 'GET', $data = null, $follow = false, $useCookie = false) {
@@ -45,8 +45,8 @@ function test_url($url, $method = 'GET', $data = null, $follow = false, $useCook
 // 1. Homepage Test
 echo "[Test 1] Testing Customer Homepage (index.php)...\n";
 $res1 = test_url("{$baseUrl}/index.php");
-if ($res1['code'] === 200 && strpos($res1['body'], 'Jayambe') !== false && strpos($res1['body'], 'Search Buses') !== false) {
-    echo "  [PASS] Homepage rendered successfully (HTTP 200) with Jayambe branding and Search Widget.\n";
+if ($res1['code'] === 200 && strpos($res1['body'], 'Gopi') !== false && strpos($res1['body'], 'Search Buses') !== false) {
+    echo "  [PASS] Homepage rendered successfully (HTTP 200) with Gopi branding and Search Widget.\n";
 } else {
     echo "  [FAIL] Homepage failed: HTTP {$res1['code']}\n";
 }
@@ -85,7 +85,7 @@ if ($res4['code'] === 200 && isset($json4['status']) && $json4['status'] === 'su
 echo "\n[Test 5] Testing Admin & Counter Staff Login (admin/login.php)...\n";
 $loginData = [
     'staff_login_submit' => 1,
-    'email' => 'counter.ahmedabad@jayambetravels.com',
+    'email' => 'counter.ahmedabad@gopitravels.com',
     'password' => 'password123'
 ];
 $res5 = test_url("{$baseUrl}/admin/login.php", 'POST', $loginData, false, true);
@@ -126,7 +126,7 @@ $counterData = [
     'seat_numbers' => $counterSeat,
     'passenger_name' => 'Dipen Shah',
     'passenger_phone' => '9825188888',
-    'passenger_email' => 'counter@jayambetravels.com',
+    'passenger_email' => 'counter@gopitravels.com',
     'boarding_point' => 'Geeta Mandir Central Terminal Platform 3',
     'counter_payment_mode' => 'Cash',
     'total_amount' => 1248.00,

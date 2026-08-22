@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Database Connection Helper
+ * Gopi Travels - Database Connection Helper
  * PDO-based MySQL connection with automatic database selection and error reporting
  */
 
@@ -12,16 +12,16 @@ if (session_status() === PHP_SESSION_NONE) {
 define('DB_HOST', '127.0.0.1');
 define('DB_USER', 'root');
 define('DB_PASS', '');
-define('DB_NAME', 'jayambe_travels');
+define('DB_NAME', 'gopi_travels');
 define('DB_PORT', '3306');
 define('DB_SOCKET', '/Applications/XAMPP/xamppfiles/var/mysql/mysql.sock');
 
 // Site Configuration
-define('SITE_NAME', 'Jayambe Travels');
+define('SITE_NAME', 'Gopi Travels');
 define('SITE_TAGLINE', 'Gujarat State Deluxe & Luxury Bus Service');
 define('SITE_URL', 'http://localhost/bus');
 define('HELPLINE_NUMBER', '1800-233-6666');
-define('SUPPORT_EMAIL', 'support@jayambetravels.com');
+define('SUPPORT_EMAIL', 'support@gopitravels.com');
 
 /**
  * Returns a singleton PDO database connection instance

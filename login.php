@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Passenger & Admin Login
+ * Gopi Travels - Passenger & Admin Login
  */
 
 require_once __DIR__ . '/config/db.php';
@@ -63,13 +63,13 @@ require_once __DIR__ . '/includes/header.php';
                     <i class="fas fa-bus-simple"></i>
                 </div>
                 <h1 style="font-size: 24px; font-weight: 800; color: #0f172a;">Passenger Login</h1>
-                <p style="color: #64748b; font-size: 13px; margin-top: 4px;">Access your Jayambe Travels tickets & profile</p>
+                <p style="color: #64748b; font-size: 13px; margin-top: 4px;">Access your Gopi Travels tickets & profile</p>
             </div>
 
             <form action="login.php" method="POST">
                 <div class="form-group-custom" style="margin-bottom: 16px;">
                     <label class="form-label-custom"><i class="fas fa-envelope"></i> Email or Mobile Number</label>
-                    <input type="text" name="email" class="form-control-custom" placeholder="demo@jayambetravels.com" value="<?= htmlspecialchars($email); ?>" required>
+                    <input type="text" name="email" class="form-control-custom" placeholder="demo@gopitravels.com" value="<?= htmlspecialchars($email); ?>" required>
                 </div>
 
                 <div class="form-group-custom" style="margin-bottom: 20px;">

@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Global Navigation Header
+ * Gopi Travels - Global Navigation Header
  */
 
 require_once __DIR__ . '/../config/db.php';
@@ -52,14 +52,14 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         <div class="container">
             <div class="header-wrapper">
                 <!-- Brand Logo Section -->
-                <a href="index.php" class="brand-logo" title="Jayambe Travels - Home">
-                    <img src="assets/images/logo.svg" alt="Jayambe Travels" style="height: 46px; width: auto; max-width: 220px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <a href="index.php" class="brand-logo" title="Gopi Travels - Home">
+                    <img src="assets/images/logo.svg" alt="Gopi Travels" style="height: 46px; width: auto; max-width: 220px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                     <div style="display:none; align-items:center; gap:10px;">
                         <div class="logo-symbol">
                             <i class="fas fa-bus-simple"></i>
                         </div>
                         <div class="brand-text">
-                            <div class="brand-name">Jayambe <span>Travels</span></div>
+                            <div class="brand-name">Gopi <span>Travels</span></div>
                             <div class="brand-tagline">Gujarat Deluxe Service</div>
                         </div>
                     </div>

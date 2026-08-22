@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Gujarat Offices Directory & Contact Us
+ * Gopi Travels - Gujarat Offices Directory & Contact Us
  */
 
 $pageTitle = 'Contact Us & Gujarat Branch Offices';
@@ -33,37 +33,37 @@ $offices = [
         'city' => 'Ahmedabad Head Office (Geeta Mandir)',
         'address' => 'Geeta Mandir Road, Near Astodia Darwaja, Ahmedabad - 380022',
         'phone' => '079-25450123 / 1800-233-6666',
-        'email' => 'ahmedabad.office@jayambetravels.com'
+        'email' => 'ahmedabad.office@gopitravels.com'
     ],
     [
         'city' => 'Surat Central Branch Office (Ring Road)',
         'address' => 'Central Bus Terminal Complex, Ring Road, Varachha, Surat - 395003',
         'phone' => '0261-2425000 / 1800-233-6666',
-        'email' => 'surat.office@jayambetravels.com'
+        'email' => 'surat.office@gopitravels.com'
     ],
     [
         'city' => 'Vadodara Central Branch Office',
         'address' => 'Opposite Railway Station, Sayajigunj, Vadodara - 390005',
         'phone' => '0265-2794000 / 1800-233-6666',
-        'email' => 'vadodara.office@jayambetravels.com'
+        'email' => 'vadodara.office@gopitravels.com'
     ],
     [
         'city' => 'Rajkot Central Branch Office',
         'address' => 'Shastri Maidan, Dhebar Road, Rajkot - 360001',
         'phone' => '0281-2223000 / 1800-233-6666',
-        'email' => 'rajkot.office@jayambetravels.com'
+        'email' => 'rajkot.office@gopitravels.com'
     ],
     [
         'city' => 'Bhavnagar Branch Office',
         'address' => 'Navapara, Near High Court Road, Bhavnagar - 364001',
         'phone' => '0278-2512000',
-        'email' => 'bhavnagar.office@jayambetravels.com'
+        'email' => 'bhavnagar.office@gopitravels.com'
     ],
     [
         'city' => 'Bhuj Branch Office (Kutch)',
         'address' => 'Station Road, Near Jubilee Ground, Bhuj - 370001',
         'phone' => '02832-220000',
-        'email' => 'bhuj.office@jayambetravels.com'
+        'email' => 'bhuj.office@gopitravels.com'
     ]
 ];
 ?>

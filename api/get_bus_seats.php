@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - JSON API: Get Bus Seats & Availability
+ * Gopi Travels - JSON API: Get Bus Seats & Availability
  */
 
 header('Content-Type: application/json');

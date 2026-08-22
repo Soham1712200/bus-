@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Bus Driver/Conductor Passenger Trip Manifest
+ * Gopi Travels - Bus Driver/Conductor Passenger Trip Manifest
  */
 
 $pageTitle = 'Bus Trip Passenger Manifest';
@@ -147,7 +147,7 @@ $vacantCount = max(0, $totalSeats - $bookedCount);
             <!-- Manifest Header -->
             <div style="border-bottom: 2px solid #0f172a; padding-bottom: 16px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start;">
                 <div style="display: flex; align-items: center; gap: 14px;">
-                    <img src="../assets/images/logo.svg" alt="Jayambe Travels" style="height: 48px; width: auto;" onerror="this.style.display='none';">
+                    <img src="../assets/images/logo.svg" alt="Gopi Travels" style="height: 48px; width: auto;" onerror="this.style.display='none';">
                     <div>
                         <h2 style="font-size: 20px; font-weight: 900; color: #0f172a; margin: 0;">JAYAMBE TRAVELS</h2>
                         <span style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">

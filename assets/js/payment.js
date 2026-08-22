@@ -1,5 +1,5 @@
 /**
- * Jayambe Travels - Demo Net Banking Gateway Simulator
+ * Gopi Travels - Demo Net Banking Gateway Simulator
  * Provides bank selection, simulated credentials, and 60-second interactive OTP verification
  */
 

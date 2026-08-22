@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Bus Fleet & Schedule Manager
+ * Gopi Travels - Bus Fleet & Schedule Manager
  */
 
 $pageTitle = 'Bus Fleet & Schedules';

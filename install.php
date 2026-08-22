@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Web-based Database Installer & System Verifier
+ * Gopi Travels - Web-based Database Installer & System Verifier
  */
 
 require_once __DIR__ . '/config/db.php';
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['run_install'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Database Setup | Jayambe Travels</title>
+    <title>Database Setup | Gopi Travels</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['run_install'])) {
     <div class="setup-card">
         <div class="brand-header">
             <i class="fas fa-bus-simple brand-icon"></i>
-            <h1>Jayambe Travels Setup</h1>
+            <h1>Gopi Travels Setup</h1>
             <p class="subtitle">Gujarat State Deluxe Bus Reservation & Fleet Engine</p>
         </div>
 
@@ -143,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['run_install'])) {
                 <i class="fas fa-database"></i>
                 <div>
                     <strong>Database</strong>
-                    <span>MySQL: `jayambe_travels`</span>
+                    <span>MySQL: `gopi_travels`</span>
                 </div>
             </div>
             <div class="spec-item">
@@ -173,7 +173,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['run_install'])) {
             <div class="console-output">
                 <?= $message; ?>
             </div>
-            <a href="index.php" class="btn-home"><i class="fas fa-arrow-right me-2"></i> Launch Jayambe Travels Website</a>
+            <a href="index.php" class="btn-home"><i class="fas fa-arrow-right me-2"></i> Launch Gopi Travels Website</a>
         <?php else: ?>
             <form method="POST">
                 <button type="submit" name="run_install" value="1" class="btn-install">

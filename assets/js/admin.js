@@ -1,5 +1,5 @@
 /**
- * Jayambe Travels - Admin & Branch Office Portal Master Script
+ * Gopi Travels - Admin & Branch Office Portal Master Script
  * Live Activity Feed Polling, Dynamic Stat Count-up, and Universal Filter
  */
 

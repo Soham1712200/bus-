@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Passenger Registration
+ * Gopi Travels - Passenger Registration
  */
 
 $pageTitle = 'Create Account';
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register_submit'])) {
                 'role' => 'passenger'
             ]);
 
-            set_flash('success', 'Account created successfully! Welcome to Jayambe Travels.');
+            set_flash('success', 'Account created successfully! Welcome to Gopi Travels.');
             header('Location: my-bookings.php');
             exit;
         }

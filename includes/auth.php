@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Authentication Helpers (Customer + Admin Portal)
+ * Gopi Travels - Authentication Helpers (Customer + Admin Portal)
  */
 
 require_once __DIR__ . '/../config/db.php';

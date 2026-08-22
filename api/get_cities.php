@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - JSON API: Get Cities
+ * Gopi Travels - JSON API: Get Cities
  */
 
 header('Content-Type: application/json');

@@ -1,5 +1,5 @@
 /**
- * Jayambe Travels - Core UI Interactivity Script
+ * Gopi Travels - Core UI Interactivity Script
  */
 
 document.addEventListener('DOMContentLoaded', () => {

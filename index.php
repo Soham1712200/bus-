@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Homepage
+ * Gopi Travels - Homepage
  * Hero Section, Animated Search Widget, Route Highlights & Fleet Showcase
  */
 
@@ -187,7 +187,7 @@ $popularRoutes = [
     </div>
 </section>
 
-<!-- Why Choose Jayambe Travels -->
+<!-- Why Choose Gopi Travels -->
 <section class="section-padding">
     <div class="container">
         <div class="section-header">

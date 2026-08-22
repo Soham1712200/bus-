@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Passenger Dashboard & Booking History
+ * Gopi Travels - Passenger Dashboard & Booking History
  */
 
 $pageTitle = 'My Bookings';

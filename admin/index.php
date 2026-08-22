@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Admin & Branch Office Dashboard Overview
+ * Gopi Travels - Admin & Branch Office Dashboard Overview
  */
 
 $pageTitle = 'Operations Dashboard';

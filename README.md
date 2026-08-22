@@ -1,4 +1,4 @@
-# Jayambe Travels - Bus Booking Web Application
+# Gopi Travels - Bus Booking Web Application
 
 A full-stack, modular, and error-free Bus Reservation Web Application built with **PHP, MySQL, HTML5, CSS3, and JavaScript (ES6+)**.
 
@@ -40,8 +40,8 @@ A full-stack, modular, and error-free Bus Reservation Web Application built with
    ```
    http://localhost/bus/install.php
    ```
-4. Click **"Initialize Database & Fleet"** to automatically create the `jayambe_travels` schema, seed 560 buses, and create demo user accounts.
+4. Click **"Initialize Database & Fleet"** to automatically create the `gopi_travels` schema, seed 560 buses, and create demo user accounts.
 
 ### Demo Passenger Account
-- **Email**: `demo@jayambetravels.com`
+- **Email**: `demo@gopitravels.com`
 - **Password**: `password123`

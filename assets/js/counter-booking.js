@@ -1,5 +1,5 @@
 /**
- * Jayambe Travels - Offline Counter Booking Engine
+ * Gopi Travels - Offline Counter Booking Engine
  * Unified Real-Time 4-Color Seat Engine & Instant Cash/POS Checkout
  */
 

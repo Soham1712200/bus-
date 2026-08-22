@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Gujarat Route Schedule & Timetable Directory
+ * Gopi Travels - Gujarat Route Schedule & Timetable Directory
  */
 
 $pageTitle = 'Gujarat Route Schedule & Timetable';

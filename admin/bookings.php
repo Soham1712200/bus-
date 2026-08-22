@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Master Reservation Lookup & Management
+ * Gopi Travels - Master Reservation Lookup & Management
  */
 
 $pageTitle = 'Master Bookings Directory';

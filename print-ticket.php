@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Standalone E-Ticket Search & Reprint Page
+ * Gopi Travels - Standalone E-Ticket Search & Reprint Page
  * Lookup by Booking Reference (PNR) or Registered Mobile Number
  */
 

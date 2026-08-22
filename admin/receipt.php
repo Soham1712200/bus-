@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Dual-Mode Thermal (80mm) & A4 Counter Receipt
+ * Gopi Travels - Dual-Mode Thermal (80mm) & A4 Counter Receipt
  */
 
 require_once __DIR__ . '/includes/auth_guard.php';
@@ -38,7 +38,7 @@ $barcodeSvg = generate_barcode_svg($booking['booking_reference']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Receipt: <?= htmlspecialchars($booking['booking_reference']); ?> | Jayambe Travels</title>
+    <title>Receipt: <?= htmlspecialchars($booking['booking_reference']); ?> | Gopi Travels</title>
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">

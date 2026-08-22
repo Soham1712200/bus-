@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Core Utility Functions
+ * Gopi Travels - Core Utility Functions
  * Helper functions for bus booking, PNR, formatting, and SVG graphics
  */
 
@@ -132,7 +132,7 @@ function generate_barcode_svg($code) {
 }
 
 /**
- * Generate inline SVG QR Code with Jayambe Travels Logo in center
+ * Generate inline SVG QR Code with Gopi Travels Logo in center
  */
 function generate_qr_svg($dataString) {
     // Generate a beautiful authentic-looking deterministic QR code SVG matrix
@@ -192,7 +192,7 @@ function generate_qr_svg($dataString) {
         }
     }
     
-    // Central Badge: Jayambe Logo Emblem
+    // Central Badge: Gopi Logo Emblem
     $centerX = ($size / 2) * $cellSize;
     $centerY = ($size / 2) * $cellSize;
     $svg .= "<circle cx=\"{$centerX}\" cy=\"{$centerY}\" r=\"16\" fill=\"#f97316\" stroke=\"#ffffff\" stroke-width=\"2\"/>";
@@ -250,7 +250,7 @@ function get_bus_class_meta($class) {
         case 'Express':
         default:
             return [
-                'tag' => 'Jayambe Express',
+                'tag' => 'Gopi Express',
                 'badge' => 'badge-express',
                 'color' => '#d97706',
                 'icon' => 'fa-route',

@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - User Logout Handler
+ * Gopi Travels - User Logout Handler
  */
 
 require_once __DIR__ . '/includes/auth.php';

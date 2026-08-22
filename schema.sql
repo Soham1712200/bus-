@@ -1,10 +1,10 @@
 -- =======================================================
--- Jayambe Travels - Bus Booking Web Application
+-- Gopi Travels - Bus Booking Web Application
 -- Database Schema & Comprehensive Seed Data (Customer + Admin Portal)
 -- =======================================================
 
-CREATE DATABASE IF NOT EXISTS `jayambe_travels` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `jayambe_travels`;
+CREATE DATABASE IF NOT EXISTS `gopi_travels` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `gopi_travels`;
 
 -- Drop tables in reverse order of foreign keys
 SET FOREIGN_KEY_CHECKS = 0;
@@ -157,11 +157,11 @@ CREATE TABLE `contact_inquiries` (
 -- Password for all accounts: "password123"
 -- =======================================================
 INSERT INTO `users` (`id`, `name`, `email`, `phone`, `password_hash`, `role`, `branch_office`) VALUES
-(1, 'Jayesh Patel', 'demo@jayambetravels.com', '9876543210', '$2y$12$FucW.nMpBIgrtYIpuxgq/.KUiWtISqX4fgc3HtoxTm079hqOrv3xa', 'passenger', NULL),
-(2, 'Admin Operations Manager', 'admin@jayambetravels.com', '9825012345', '$2y$12$FucW.nMpBIgrtYIpuxgq/.KUiWtISqX4fgc3HtoxTm079hqOrv3xa', 'admin', 'Ahmedabad Head Office'),
-(3, 'Ramesh Shah (Ahmedabad Counter)', 'counter.ahmedabad@jayambetravels.com', '9825100111', '$2y$12$FucW.nMpBIgrtYIpuxgq/.KUiWtISqX4fgc3HtoxTm079hqOrv3xa', 'counter_agent', 'Ahmedabad Head Office (Geeta Mandir)'),
-(4, 'Suresh Mehta (Surat Counter)', 'counter.surat@jayambetravels.com', '9825200222', '$2y$12$FucW.nMpBIgrtYIpuxgq/.KUiWtISqX4fgc3HtoxTm079hqOrv3xa', 'counter_agent', 'Surat Central Branch Office (Ring Road)'),
-(5, 'Dipak Joshi (Vadodara Counter)', 'counter.vadodara@jayambetravels.com', '9825300333', '$2y$12$FucW.nMpBIgrtYIpuxgq/.KUiWtISqX4fgc3HtoxTm079hqOrv3xa', 'counter_agent', 'Vadodara Central Branch Office (Sayajigunj)');
+(1, 'Jayesh Patel', 'demo@gopitravels.com', '9876543210', '$2y$12$FucW.nMpBIgrtYIpuxgq/.KUiWtISqX4fgc3HtoxTm079hqOrv3xa', 'passenger', NULL),
+(2, 'Admin Operations Manager', 'admin@gopitravels.com', '9825012345', '$2y$12$FucW.nMpBIgrtYIpuxgq/.KUiWtISqX4fgc3HtoxTm079hqOrv3xa', 'admin', 'Ahmedabad Head Office'),
+(3, 'Ramesh Shah (Ahmedabad Counter)', 'counter.ahmedabad@gopitravels.com', '9825100111', '$2y$12$FucW.nMpBIgrtYIpuxgq/.KUiWtISqX4fgc3HtoxTm079hqOrv3xa', 'counter_agent', 'Ahmedabad Head Office (Geeta Mandir)'),
+(4, 'Suresh Mehta (Surat Counter)', 'counter.surat@gopitravels.com', '9825200222', '$2y$12$FucW.nMpBIgrtYIpuxgq/.KUiWtISqX4fgc3HtoxTm079hqOrv3xa', 'counter_agent', 'Surat Central Branch Office (Ring Road)'),
+(5, 'Dipak Joshi (Vadodara Counter)', 'counter.vadodara@gopitravels.com', '9825300333', '$2y$12$FucW.nMpBIgrtYIpuxgq/.KUiWtISqX4fgc3HtoxTm079hqOrv3xa', 'counter_agent', 'Vadodara Central Branch Office (Sayajigunj)');
 
 -- =======================================================
 -- SEED DATA: Routes across all major Gujarat Cities

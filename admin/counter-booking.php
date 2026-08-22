@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Offline Branch Office Counter Booking Desk
+ * Gopi Travels - Offline Branch Office Counter Booking Desk
  * Interactive 4-Color Seat Matrix with Real-Time Locking & Instant Thermal Receipt
  */
 
@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_counter_bookin
     $seatNumbersStr = sanitize($_POST['seat_numbers'] ?? '');
     $passengerName = sanitize($_POST['passenger_name'] ?? '');
     $passengerPhone = sanitize($_POST['passenger_phone'] ?? '');
-    $passengerEmail = sanitize($_POST['passenger_email'] ?? 'counter@jayambetravels.com');
+    $passengerEmail = sanitize($_POST['passenger_email'] ?? 'counter@gopitravels.com');
     $boardingPoint = sanitize($_POST['boarding_point'] ?? 'Geeta Mandir Central Terminal');
     $counterPaymentMode = sanitize($_POST['counter_payment_mode'] ?? 'Cash');
     $totalAmount = (float)($_POST['total_amount'] ?? 0);

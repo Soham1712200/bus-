@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Bus Search & Live Interactive Seat Matrix
+ * Gopi Travels - Bus Search & Live Interactive Seat Matrix
  * Complete search results, multi-filter sidebar, live 2x2 seater / 2x1 sleeper layout
  */
 

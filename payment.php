@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Demo Net Banking Payment Gateway
+ * Gopi Travels - Demo Net Banking Payment Gateway
  * Simulates Indian Net Banking with interactive OTP prompt and bank authorization
  */
 
@@ -83,7 +83,7 @@ $passengersJson = json_encode($passengers);
                 </div>
 
                 <div style="margin: 20px auto;">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=9081020835@ybl%26pn=Jayambe+Travels%26am=<?= $grandTotal ?>%26cu=INR" alt="UPI QR Code" style="border: 2px solid #e2e8f0; border-radius: 12px; padding: 10px; max-width: 250px; background: white;">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=9081020835@ybl%26pn=Gopi+Travels%26am=<?= $grandTotal ?>%26cu=INR" alt="UPI QR Code" style="border: 2px solid #e2e8f0; border-radius: 12px; padding: 10px; max-width: 250px; background: white;">
                 </div>
 
                 <div style="font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 5px;">UPI ID: <span style="color: var(--primary);">9081020835@ybl</span></div>

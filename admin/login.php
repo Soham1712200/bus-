@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Admin & Staff Portal Login
+ * Gopi Travels - Admin & Staff Portal Login
  */
 
 require_once __DIR__ . '/../config/db.php';
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['staff_login_submit'])
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff & Counter Agent Login | Jayambe Travels</title>
+    <title>Staff & Counter Agent Login | Gopi Travels</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -66,8 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['staff_login_submit'])
         <div style="position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, #f97316, #0284c7);"></div>
 
         <div style="text-align: center; margin-bottom: 28px;">
-            <img src="../assets/images/logo.svg" alt="Jayambe Travels" style="height: 48px; width: auto; margin-bottom: 12px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-            <div style="display:none; font-size:24px; font-weight:800; color:#0b132b;">Jayambe <span style="color:#f97316;">Travels</span></div>
+            <img src="../assets/images/logo.svg" alt="Gopi Travels" style="height: 48px; width: auto; margin-bottom: 12px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <div style="display:none; font-size:24px; font-weight:800; color:#0b132b;">Gopi <span style="color:#f97316;">Travels</span></div>
             <div style="display:inline-block; background: #e0f2fe; color: #0369a1; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px;">
                 <i class="fas fa-shield-halved me-1"></i> Admin & Branch Office Portal
             </div>
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['staff_login_submit'])
         <form action="login.php" method="POST">
             <div class="form-group-custom" style="margin-bottom: 16px;">
                 <label class="form-label-custom"><i class="fas fa-id-badge"></i> Staff Email</label>
-                <input type="email" name="email" id="staffEmailInput" class="form-control-custom" placeholder="staff@jayambetravels.com" value="<?= htmlspecialchars($email); ?>" required>
+                <input type="email" name="email" id="staffEmailInput" class="form-control-custom" placeholder="staff@gopitravels.com" value="<?= htmlspecialchars($email); ?>" required>
             </div>
 
             <div class="form-group-custom" style="margin-bottom: 20px;">

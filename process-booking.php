@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Backend Booking & Transaction Processor
+ * Gopi Travels - Backend Booking & Transaction Processor
  * Saves booking in database, assigns unique PNR, and forwards to E-Ticket view
  */
 

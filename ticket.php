@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Official E-Ticket View & Printable Layout
+ * Gopi Travels - Official E-Ticket View & Printable Layout
  */
 
 $pageTitle = 'E-Ticket Confirmation';

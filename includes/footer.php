@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Global Footer
+ * Gopi Travels - Global Footer
  */
 ?>
     </main>
@@ -12,19 +12,19 @@
                 <!-- Brand Info Col -->
                 <div class="footer-col">
                     <div class="brand-logo" style="margin-bottom: 16px;">
-                        <img src="assets/images/logo.svg" alt="Jayambe Travels" style="height: 44px; width: auto; max-width: 220px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <img src="assets/images/logo.svg" alt="Gopi Travels" style="height: 44px; width: auto; max-width: 220px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         <div style="display:none; align-items:center; gap:10px;">
                             <div class="logo-symbol">
                                 <i class="fas fa-bus-simple"></i>
                             </div>
                             <div class="brand-text">
-                                <div class="brand-name">Jayambe <span>Travels</span></div>
+                                <div class="brand-name">Gopi <span>Travels</span></div>
                                 <div class="brand-tagline" style="color: #94a3b8;">Gujarat State Partner Network</div>
                             </div>
                         </div>
                     </div>
                     <p style="font-size: 13px; color: #94a3b8; line-height: 1.6; margin-bottom: 18px;">
-                        Jayambe Travels provides seamless, punctual, and safe passenger transport across all districts of Gujarat with luxury Volvo, Electric AC, Sleeper, and Express coaches.
+                        Gopi Travels provides seamless, punctual, and safe passenger transport across all districts of Gujarat with luxury Volvo, Electric AC, Sleeper, and Express coaches.
                     </p>
                     <div style="display: flex; gap: 10px;">
                         <span class="badge" style="background: rgba(255,255,255,0.06); padding: 6px 12px; border-radius: 6px; font-size: 12px; color: #cbd5e1;">
@@ -78,7 +78,7 @@
             <!-- Footer Bottom -->
             <div class="footer-bottom">
                 <div>
-                    &copy; <?= date('Y'); ?> <strong>Jayambe Travels</strong>. All Rights Reserved. Built with Pure PHP & MySQL.
+                    &copy; <?= date('Y'); ?> <strong>Gopi Travels</strong>. All Rights Reserved. Built with Pure PHP & MySQL.
                 </div>
                 <div style="display: flex; gap: 16px;">
                     <a href="contact.php" style="color: #94a3b8;">Terms & Conditions</a>

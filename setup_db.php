@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Comprehensive Database Seeder & Setup Script
+ * Gopi Travels - Comprehensive Database Seeder & Setup Script
  * Seeds all Gujarat routes with 20 buses per route across all bus classes
  * Seeds both Online and Counter Offline reservations for Admin sync testing
  */
@@ -248,10 +248,10 @@ echo "--------------------------------------------------------\n";
 echo "✓ Total Routes: " . count($routes) . "\n";
 echo "✓ Total Buses: {$totalBusesInserted} (20 per route)\n";
 echo "✓ Sample Bookings: {$sampleBookingCount}\n";
-echo "✓ SuperAdmin Account: admin@jayambetravels.com / password123\n";
-echo "✓ Counter Agent (Ahmedabad): counter.ahmedabad@jayambetravels.com / password123\n";
-echo "✓ Counter Agent (Surat): counter.surat@jayambetravels.com / password123\n";
-echo "✓ Counter Agent (Vadodara): counter.vadodara@jayambetravels.com / password123\n";
+echo "✓ SuperAdmin Account: admin@gopitravels.com / password123\n";
+echo "✓ Counter Agent (Ahmedabad): counter.ahmedabad@gopitravels.com / password123\n";
+echo "✓ Counter Agent (Surat): counter.surat@gopitravels.com / password123\n";
+echo "✓ Counter Agent (Vadodara): counter.vadodara@gopitravels.com / password123\n";
 echo "--------------------------------------------------------\n";
 echo "Admin Portal: http://localhost/bus/admin/\n";
 echo "Customer Site: http://localhost/bus/\n";

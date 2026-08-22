@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Ticket Cancellation & Instant Refund System
+ * Gopi Travels - Ticket Cancellation & Instant Refund System
  */
 
 $pageTitle = 'Cancel Ticket & Refund';
@@ -246,7 +246,7 @@ if ($booking && $booking['booking_status'] === 'Confirmed') {
             <!-- Cancellation Policy Info -->
             <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: var(--shadow-sm);">
                 <h4 style="font-size: 15px; font-weight: 800; color: #0f172a; margin-bottom: 12px;">
-                    <i class="fas fa-info-circle text-primary me-2"></i> Jayambe Travels Cancellation Policy
+                    <i class="fas fa-info-circle text-primary me-2"></i> Gopi Travels Cancellation Policy
                 </h4>
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; font-size: 12px; text-align: center;">
                     <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px;">

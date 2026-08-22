@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Admin & Staff Authentication Guard
+ * Gopi Travels - Admin & Staff Authentication Guard
  */
 
 require_once __DIR__ . '/../../config/db.php';

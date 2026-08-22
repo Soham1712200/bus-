@@ -1,5 +1,5 @@
 /**
- * Jayambe Travels - Dynamic Live Seat Matrix & Passenger Form Engine
+ * Gopi Travels - Dynamic Live Seat Matrix & Passenger Form Engine
  * Handles 2x2 Seater & 2x1 Sleeper Layouts, Real-time Pricing, and Multi-Passenger Inputs
  */
 

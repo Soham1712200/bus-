@@ -1,6 +1,6 @@
 <?php
 /**
- * Jayambe Travels - Unified Real-Time Seat Engine API (Online + Offline Counter Sync)
+ * Gopi Travels - Unified Real-Time Seat Engine API (Online + Offline Counter Sync)
  * 4-Color Status Matrix & Temporary Seat Locking Engine
  */
 
