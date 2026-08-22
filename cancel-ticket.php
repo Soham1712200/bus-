@@ -21,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_cancellation'
     $refundAmount = (float)$_POST['refund_amount'];
     $cancellationCharge = (float)$_POST['cancellation_charge'];
     $reason = sanitize($_POST['cancellation_reason'] ?? 'Change of Plans');
+    $refundUpiId = sanitize($_POST['refund_upi_id'] ?? '');
 
     if ($pdo) {
         try {
@@ -31,8 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_cancellation'
             $updStmt->execute([$bookingId, $confirmPnr]);
 
             // Insert cancellation record
-            $cancStmt = $pdo->prepare("INSERT INTO cancellations (booking_id, booking_reference, refund_amount, cancellation_charge, cancellation_reason) VALUES (?, ?, ?, ?, ?)");
-            $cancStmt->execute([$bookingId, $confirmPnr, $refundAmount, $cancellationCharge, $reason]);
+            $cancStmt = $pdo->prepare("INSERT INTO cancellations (booking_id, booking_reference, refund_amount, cancellation_charge, cancellation_reason, refund_upi_id) VALUES (?, ?, ?, ?, ?, ?)");
+            $cancStmt->execute([$bookingId, $confirmPnr, $refundAmount, $cancellationCharge, $reason, $refundUpiId]);
 
             $pdo->commit();
 
@@ -42,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_cancellation'
                 'refund_amount' => $refundAmount,
                 'cancellation_charge' => $cancellationCharge,
                 'reason' => $reason,
+                'refund_upi_id' => $refundUpiId,
                 'refund_ref' => 'REF-' . strtoupper(bin2hex(random_bytes(4)))
             ];
             set_flash('success', "Ticket {$confirmPnr} cancelled successfully. Refund of " . format_price($refundAmount) . " initiated.");
@@ -136,7 +138,7 @@ if ($booking && $booking['booking_status'] === 'Confirmed') {
                         <strong style="color:#059669; font-size:18px;"><?= format_price($refundInfo['refund_amount']); ?></strong>
                     </div>
                     <div style="font-size:11px; color:#94a3b8; margin-top:10px;">
-                        * Refund will be credited back to your original Net Banking account within 24-48 business hours.
+                        * Refund will be credited back to your provided UPI ID (<strong><?= htmlspecialchars($refundInfo['refund_upi_id'] ?? 'Original Source'); ?></strong>) after 15 days.
                     </div>
                 </div>
 
@@ -210,6 +212,11 @@ if ($booking && $booking['booking_status'] === 'Confirmed') {
                             <option value="Incorrect date selected">Incorrect date selected</option>
                             <option value="Other reasons">Other reasons</option>
                         </select>
+                    </div>
+
+                    <div style="margin-bottom: 24px;">
+                        <label class="form-label-custom"><i class="fas fa-qrcode"></i> UPI ID for Refund</label>
+                        <input type="text" name="refund_upi_id" class="form-control-custom" style="height: 44px;" placeholder="Enter your UPI ID (e.g. name@bank)" required>
                     </div>
 
                     <div style="display: flex; justify-content: space-between; align-items: center;">
