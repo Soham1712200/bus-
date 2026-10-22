@@ -13,9 +13,15 @@ A full-stack, modular, and error-free Bus Reservation Web Application built with
   - Real-time seat selection for **2x2 Seater** and **2x1 Sleeper** (with Lower & Upper berth decks).
   - Dynamic fare calculation (Base Fare, 5% GST, Toll/Reservation fee).
   - Dynamic passenger detail inputs generated for each selected seat.
-- **Demo Net Banking Payment Simulation**:
-  - Bank selection (SBI, HDFC, ICICI, Axis, Bank of Baroda, Kotak, PNB).
-  - Interactive OTP verification modal with 60s countdown timer and 1-click **Auto-fill Demo OTP (`123456`)**.
+- **GopiPay™ Express Gateway (First-Party Custom Dummy Payment Gateway)**:
+  - **Dynamic UPI & QR Code Scanner**: Live interactive QR code with 10-minute auto-expiry countdown, quick test VPA chips (`demo@gopipay`, `traveler@ybl`, `gopipay@icici`), and simulated UPI Push notification intent modal (Google Pay, PhonePe, Paytm, BHIM).
+  - **Interactive 3D Card Visualizer**: Real-time card type detection (Visa, Mastercard, RuPay, Amex) with 1-click test card chips (Visa `4111 2222 3333 4444`, Mastercard `5500 0000 0000 0004`, RuPay `6070 1234 5678 9012`, and Bank Decline `4000 0000 0000 0002`).
+  - **40+ Bank Net Banking with 2FA OTP Simulator**: Two-factor SMS OTP authentication screen with 6 individual digit inputs and a 1-click autofill test helper (`123456`).
+  - **Digital Wallets**: Paytm, PhonePe, MobiKwik, and Ola Money integration.
+  - **Pay on Boarding**: Guaranteed seat reservation with cash or UPI collection by conductor upon boarding.
+  - **HMAC SHA-256 Checksum**: Deterministic transaction verification and tamper-proof security tokens.
+  - **Developer Sandbox Controls**: Real-time toggle to simulate Successful transaction (`HTTP 200 OK`) vs Simulated Bank Decline (`Insufficient Funds`).
+  - **1-Click Instant GopiPay**: Instant test checkout button for seamless paired-programming and review.
 - **Printable E-Ticket**:
   - Official Electronic Reservation Slip (ERS) layout with unique PNR (`JAY-XXXXXX`).
   - High-resolution inline SVG Barcode (Code-128) & SVG QR Code.

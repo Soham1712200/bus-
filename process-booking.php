@@ -7,10 +7,7 @@
 require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/includes/auth.php';
-require_once __DIR__ . '/config/razorpay.php';
-require_once __DIR__ . '/vendor/autoload.php';
-use Razorpay\Api\Api;
-use Razorpay\Api\Errors\SignatureVerificationError;
+require_once __DIR__ . '/config/gateway.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['bus_id']) || empty($_POST['seat_numbers'])) {
     set_flash('danger', 'Invalid booking request.');
@@ -42,7 +39,7 @@ $passengersJson = $_POST['passengers_json'] ?? '[]';
 $baseFare = (float)$_POST['base_fare'];
 $gstAmount = (float)$_POST['gst_amount'];
 $totalAmount = (float)$_POST['total_amount'];
-$paymentMethod = sanitize($_POST['payment_method'] ?? 'UPI');
+$paymentMethod = sanitize($_POST['payment_method'] ?? 'Pay on Boarding');
 
 // Re-verify that seats were not booked in the meantime
 $alreadyBooked = get_booked_seats($busId, $journeyDate);
@@ -54,29 +51,24 @@ foreach ($seatNumbers as $st) {
     }
 }
 
-// Generate unique PNR and default Transaction ID
+// Handle GopiPay Sandbox Simulation Outcomes
+$simulationStatus = sanitize($_POST['gopipay_simulation_status'] ?? $_POST['simulation_status'] ?? 'success');
+if ($simulationStatus === 'failed') {
+    $declineReason = sanitize($_POST['gopipay_decline_reason'] ?? 'Payment was declined or cancelled by bank.');
+    set_flash('danger', "GopiPay Transaction Declined: {$declineReason}. Please select another payment method or retry.");
+    header('Location: search.php?journey_date=' . urlencode($journeyDate));
+    exit;
+}
+
+// Generate unique PNR and Transaction Reference
 $pnr = generate_pnr();
-$txnId = generate_txn_id();
+$txnId = !empty($_POST['transaction_id']) ? sanitize($_POST['transaction_id']) : (!empty($_POST['gopipay_txnid']) ? sanitize($_POST['gopipay_txnid']) : ('GP-' . date('ymd') . '-' . strtoupper(substr(md5(uniqid()), 0, 8))));
 $currentUser = current_user();
 $userId = $currentUser ? (int)$currentUser['id'] : null;
 
-// Handle Razorpay Payment
-if (stripos($paymentMethod, 'Razorpay') !== false && !empty($_POST['razorpay_payment_id'])) {
-    try {
-        $api = new Api(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET);
-        $attributes = [
-            'razorpay_order_id' => $_POST['razorpay_order_id'],
-            'razorpay_payment_id' => $_POST['razorpay_payment_id'],
-            'razorpay_signature' => $_POST['razorpay_signature']
-        ];
-        $api->utility->verifyPaymentSignature($attributes);
-        $txnId = 'RZP-' . sanitize($_POST['razorpay_payment_id']);
-    } catch (SignatureVerificationError $e) {
-        set_flash('danger', 'Payment verification failed: ' . $e->getMessage());
-        header("Location: search.php?journey_date={$journeyDate}");
-        exit;
-    }
-}
+
+
+
 
 try {
     $stmt = $pdo->prepare("INSERT INTO bookings (

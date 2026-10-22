@@ -429,6 +429,7 @@ if ($pdo) {
 
                                         <!-- Passenger Form & Checkout CTA -->
                                         <form action="payment.php" method="POST" id="bookingForm_<?= $bus['id']; ?>">
+                                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token(), ENT_QUOTES, 'UTF-8'); ?>">
                                             <input type="hidden" name="bus_id" value="<?= $bus['id']; ?>">
                                             <input type="hidden" name="journey_date" value="<?= htmlspecialchars($journeyDate); ?>">
                                             <input type="hidden" name="seat_numbers" id="inputSeatNumbers_<?= $bus['id']; ?>" value="">
@@ -450,7 +451,7 @@ if ($pdo) {
                                             </div>
 
                                             <button type="submit" class="btn-proceed-booking" id="btnProceed_<?= $bus['id']; ?>" disabled>
-                                                <i class="fas fa-lock me-1"></i> Proceed to Demo Net Banking
+                                                <i class="fas fa-arrow-right me-1"></i> Proceed to Dummy Checkout &rarr;
                                             </button>
                                         </form>
                                     </div>

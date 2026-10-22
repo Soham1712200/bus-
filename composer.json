@@ -1,5 +1,4 @@
 {
-    "require": {
-        "razorpay/razorpay": "^2.9"
-    }
+    "name": "gopi-travels/bus-booking",
+    "description": "Gopi Travels - Bus Reservation Web Application with Free Dummy Payment Gateway"
 }
