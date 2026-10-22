@@ -326,7 +326,7 @@ if ($pdo) {
                                 <div class="fare-display">
                                     <?= format_price($bus['fare']); ?> <small>/ seat</small>
                                 </div>
-                                <button type="button" class="btn-select-seat" id="btnSelectSeat_<?= $bus['id']; ?>" onclick="BookingApp.toggleSeatMatrix('<?= $bus['id']; ?>', '<?= $bus['fare']; ?>', '<?= $bus['is_sleeper']; ?>', '<?= $bus['bus_number']; ?>', <?= $jsonBookedSeats; ?>)">
+                                <button type="button" class="btn-select-seat" id="btnSelectSeat_<?= $bus['id']; ?>" onclick="BookingApp.toggleSeatMatrix('<?= $bus['id']; ?>', '<?= $bus['fare']; ?>', '<?= $bus['is_sleeper']; ?>', '<?= $bus['bus_number']; ?>', <?= $jsonBookedSeats; ?>, <?= (int)$bus['total_seats']; ?>)">
                                     <i class="fas fa-couch"></i> Select Seats
                                 </button>
                             </div>

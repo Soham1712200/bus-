@@ -66,6 +66,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (sourceSelect && destSelect) {
                 sourceSelect.value = src;
                 destSelect.value = dst;
+                const form = document.getElementById('busSearchForm') || chip.closest('form');
+                if (form) {
+                    form.submit();
+                } else {
+                    window.location.href = `search.php?source=${encodeURIComponent(src)}&destination=${encodeURIComponent(dst)}&journey_date=${encodeURIComponent(dateInput ? dateInput.value : '')}`;
+                }
+            } else {
+                window.location.href = chip.getAttribute('href');
             }
         });
     });

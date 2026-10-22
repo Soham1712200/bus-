@@ -14,7 +14,7 @@ const BookingApp = {
     /**
      * Toggle Seat Selector Accordion for a Bus Card
      */
-    toggleSeatMatrix(busId, fare, isSleeper, busNumber, bookedSeatsList = []) {
+    toggleSeatMatrix(busId, fare, isSleeper, busNumber, bookedSeatsList = [], totalSeats = 40) {
         const container = document.getElementById(`seatContainer_${busId}`);
         const btn = document.getElementById(`btnSelectSeat_${busId}`);
         
@@ -43,7 +43,8 @@ const BookingApp = {
         // Set active bus
         this.activeBusId = busId;
         this.activeBusFare = parseFloat(fare);
-        this.isSleeper = (isSleeper == 1 || isSleeper === true);
+        this.isSleeper = (isSleeper == 1 || isSleeper === true || isSleeper === '1');
+        this.totalSeats = parseInt(totalSeats, 10) || 40;
         this.selectedSeats = [];
         this.bookedSeats[busId] = bookedSeatsList;
 
@@ -85,7 +86,7 @@ const BookingApp = {
         const booked = this.bookedSeats[busId] || [];
 
         if (this.isSleeper) {
-            // Sleeper layout with Lower & Upper decks
+            // Sleeper layout with Lower & Upper decks (15 berths each = 30 total)
             matrixContainer.innerHTML = `
                 <div class="deck-tabs">
                     <button type="button" class="deck-tab-btn active" onclick="BookingApp.switchDeck('${busId}', 'lower')">
@@ -107,10 +108,11 @@ const BookingApp = {
                 </div>
             `;
         } else {
-            // Seater 2x2 layout (40 seats)
+            // Seater 2x2 layout
+            const seatCount = this.totalSeats || 40;
             matrixContainer.innerHTML = `
                 <div class="seater-grid-layout">
-                    ${this.generateSeaterSeats(40, booked, busId)}
+                    ${this.generateSeaterSeats(seatCount, booked, busId)}
                 </div>
             `;
         }
@@ -174,28 +176,66 @@ const BookingApp = {
     },
 
     /**
-     * Generate 2x1 Sleeper Berths
+     * Generate 2x1 Sleeper Berths (Single | Aisle | Double 1 | Double 2)
      */
     generateSleeperBerths(prefix, start, count, bookedList, busId) {
         let html = '';
-        for (let i = start; i <= count; i++) {
-            const seatNo = `${prefix}${i}`;
-            const isBooked = bookedList.includes(seatNo);
-            const isSelected = this.selectedSeats.includes(seatNo);
-
-            let cls = 'sleeper-berth-unit';
-            if (isBooked) cls += ' booked';
-            else if (isSelected) cls += ' selected';
-
-            const clickAction = isBooked ? '' : `onclick="BookingApp.toggleSeat('${busId}', '${seatNo}')"`;
+        for (let i = start; i <= count; i += 3) {
+            // 1. Single Berth (Left)
+            const s1 = `${prefix}${i}`;
+            const isBooked1 = bookedList.includes(s1);
+            const isSelected1 = this.selectedSeats.includes(s1);
+            let cls1 = 'sleeper-berth-unit' + (isBooked1 ? ' booked' : isSelected1 ? ' selected' : '');
+            const click1 = isBooked1 ? '' : `onclick="BookingApp.toggleSeat('${busId}', '${s1}')"`;
 
             html += `
-                <div class="${cls}" data-seat="${seatNo}" ${clickAction}>
+                <div class="${cls1}" data-seat="${s1}" ${click1} title="${isBooked1 ? 'Already Booked' : 'Single Berth ' + s1}">
                     <i class="fas fa-bed"></i>
-                    <span>${seatNo}</span>
-                    <small style="font-size:9px; color: inherit;">${prefix === 'L' ? 'Lower' : 'Upper'}</small>
+                    <span>${s1}</span>
+                    <small style="font-size:9px; color: inherit;">Single</small>
                 </div>
             `;
+
+            // 2. Aisle Spacer
+            html += `
+                <div class="sleeper-aisle-divider" style="display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:11px;">
+                    <i class="fas fa-arrows-up-down"></i>
+                </div>
+            `;
+
+            // 3. Double Berth 1 (Window)
+            if (i + 1 <= count) {
+                const s2 = `${prefix}${i + 1}`;
+                const isBooked2 = bookedList.includes(s2);
+                const isSelected2 = this.selectedSeats.includes(s2);
+                let cls2 = 'sleeper-berth-unit' + (isBooked2 ? ' booked' : isSelected2 ? ' selected' : '');
+                const click2 = isBooked2 ? '' : `onclick="BookingApp.toggleSeat('${busId}', '${s2}')"`;
+
+                html += `
+                    <div class="${cls2}" data-seat="${s2}" ${click2} title="${isBooked2 ? 'Already Booked' : 'Window Berth ' + s2}">
+                        <i class="fas fa-bed"></i>
+                        <span>${s2}</span>
+                        <small style="font-size:9px; color: inherit;">Window</small>
+                    </div>
+                `;
+            }
+
+            // 4. Double Berth 2 (Aisle)
+            if (i + 2 <= count) {
+                const s3 = `${prefix}${i + 2}`;
+                const isBooked3 = bookedList.includes(s3);
+                const isSelected3 = this.selectedSeats.includes(s3);
+                let cls3 = 'sleeper-berth-unit' + (isBooked3 ? ' booked' : isSelected3 ? ' selected' : '');
+                const click3 = isBooked3 ? '' : `onclick="BookingApp.toggleSeat('${busId}', '${s3}')"`;
+
+                html += `
+                    <div class="${cls3}" data-seat="${s3}" ${click3} title="${isBooked3 ? 'Already Booked' : 'Aisle Berth ' + s3}">
+                        <i class="fas fa-bed"></i>
+                        <span>${s3}</span>
+                        <small style="font-size:9px; color: inherit;">Aisle</small>
+                    </div>
+                `;
+            }
         }
         return html;
     },

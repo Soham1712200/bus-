@@ -1106,9 +1106,12 @@ select.form-control-custom {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 12px;
-    max-width: 380px;
+    max-width: 400px;
     margin: 0 auto;
     position: relative;
+}
+.seater-grid-layout .bus-seat-unit:nth-child(4n+2) {
+    margin-right: 20px;
 }
 .seater-grid-layout .seat-aisle-divider {
     grid-column: span 4;
@@ -1161,10 +1164,17 @@ select.form-control-custom {
 /* Sleeper Berth Styling */
 .sleeper-grid-layout {
     display: grid;
-    grid-template-columns: 1fr 40px 1fr 1fr;
+    grid-template-columns: 1fr 36px 1fr 1fr;
     gap: 14px;
-    max-width: 420px;
+    max-width: 440px;
     margin: 0 auto;
+}
+.sleeper-aisle-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    font-size: 12px;
 }
 .sleeper-berth-unit {
     height: 90px;

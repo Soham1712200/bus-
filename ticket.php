@@ -75,7 +75,7 @@ $reportingTime = date('h:i A', $depTimestamp - 900);
                         <i class="fas fa-bus-simple"></i>
                     </div>
                     <div>
-                        <h2>JAYAMBE TRAVELS (GUJARAT)</h2>
+                        <h2><?= SITE_NAME; ?> (GUJARAT)</h2>
                         <p>Gujarat State Deluxe Bus Service &bull; Electronic Reservation Slip (ERS)</p>
                     </div>
                 </div>
